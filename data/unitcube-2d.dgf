@@ -1,0 +1,19 @@
+DGF
+
+Interval
+0   0                                   % first corner
+1   1                                   % second corner
+8   8                                   % 8 cells in each direction
+#
+
+BoundaryDomain
+default 1                               % all boundaries have id 1
+#
+
+GridParameter
+name 2d-unit-cube                       % name of the grid
+refinementedge longest                  % refinement edge for bisectioning
+overlap 1                               % number of overlap cells
+#
+
+# unitcube2.dgf

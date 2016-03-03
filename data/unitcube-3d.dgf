@@ -1,0 +1,22 @@
+DGF
+
+Interval
+0  0  0                                 % first corner
+1  1  1                                % second corner
+4  4  4                                 % 4 cells in each direction
+#
+
+BoundaryDomain
+default 1                               % all boundaries have id 1
+#
+
+GridParameter
+name 3d-unit-cube                       % name of the grid
+refinementedge arbitrary                % refinement edge for bisectioning
+overlap 1                               % number of overlap cells
+periodic                                % periodicity parameter for YaspGrid
+closure none                            % no green closure on UGGrid
+copies all                              % let UGGrid make copies
+#
+
+# unitcube3.dgf

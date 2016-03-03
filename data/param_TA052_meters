@@ -1,0 +1,16 @@
+##### Parameters for TA052 ######
+
+fem.io.macroGrid: TA052_meters.dgf
+
+electrode.use_node_assignment: false
+
+electrode.positions: ../data/TA052positions_meters.txt
+electrode.nodes: ../data/electrode_nodes_TA052_meters
+surface.coordinates: ../data/surface_coordinates_TA052_precise
+
+ground.hsquared: 1.5e-5 #1.5e-8
+groundposition.x: 0.0
+groundposition.y: -0.104467562567864
+groundposition.z: -0.0480000000021847
+
+fem.assign_conductivities: false  # TA052 has the correct conductivities in the dgf file

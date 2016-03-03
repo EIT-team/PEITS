@@ -1,0 +1,10 @@
+##### Parameters for TA052 ######
+
+fem.io.macroGrid: unitcube-3d.dgf
+
+electrode.positions: ../data/electrode_positions_050413_655k.txt  # will be ignored, due to changes in electrode_helpers.hh
+
+ground.hsquared: 1e-8
+groundposition.x: 0.5
+groundposition.y: 0.0
+groundposition.z: 0.0
