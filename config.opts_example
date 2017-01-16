@@ -1,5 +1,5 @@
-PETSCPATH="/home/tom/PEITS_root/petscBUILD"
-ZOLTANPATH="/home/tom/PEITS_root/Zoltan_v3.8/BUILD_DIR"
+PETSCPATH="/home/username/PEITS_root/petscBUILD"
+ZOLTANPATH="/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR"
 
 
 
