@@ -1,4 +1,4 @@
-config.opts
+*.opts
 src/.deps/dune_peits-dune_peits.Po
 Makefile
 Makefile.in
