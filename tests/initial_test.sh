@@ -5,9 +5,15 @@
 # This is a fairly crude method, but md5 hashing won't work, due to slightly different (at >10 decimal places)
 # voltages/jacobians being generated on different processers.
 
-# Empty output directory
-cd ../output
-rm *.*
+# Empty output directory if it exists, as don't want to get confused with multiple files.
+# Test should only be run when first installing the software, so the directory shouldn't exist yet
+
+cd ..
+if [ -d output ]
+then
+	cd output
+	rm *.*
+fi
 
 #  run forward calculation
 cd ../src
