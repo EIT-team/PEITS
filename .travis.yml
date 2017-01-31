@@ -1,0 +1,30 @@
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev
+  
+  install:
+  
+  - mkdir PEITS_root
+  - cd PEITS_root
+
+  - git clone -b maint https://bitbucket.org/petsc/petsc petsc
+
+  - cd petsc
+  - git checkout 8695de0
+
+
+  - ./configure --prefix=/home/travis/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes  --download-openmpi=yes --download-blacs=yes && make all test && make install
+
+
+  - cd ..
+  - wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.8.tar.gz
+  - tar xf zoltan_distrib_v3.8.tar.gz
+
+  - mkdir Zoltan_v3.8/BUILD_DIR
+  - cd Zoltan_v3.8/BUILD_DIR
+
+
+  - ../configure --prefix=/home/travis/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/PEITS_root/petscBUILD"
+
+  - make everything
+  - make install
