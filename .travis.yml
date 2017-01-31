@@ -16,7 +16,7 @@ install:
   - git checkout 8695de0
 
 
-  - ./configure --prefix=/home/travis/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes  --download-openmpi=yes --download-blacs=yes && make all test && make install
+  - ./configure --prefix=/home/travis/build/PEITS/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes  --download-openmpi=yes --download-blacs=yes && make all test && make install
 
 
   - cd ..
@@ -27,7 +27,23 @@ install:
   - cd Zoltan_v3.8/BUILD_DIR
 
 
-  - ../configure --prefix=/home/travis/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/PEITS_root/petscBUILD"
+  - ../configure --prefix=/home/travis/build/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/PEITS/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/build/PEITS/PEITS_root/petscBUILD"
 
   - make everything
   - make install
+  
+  build:
+  - cd /home/travis/build/EIT_Team/PEITS
+  - mv config.opts_example config.opts
+
+  - PETSCPATH=/home/travis/build/PEITS/PEITS_root/petscBUILD
+  - ZOLTANPATH=/home/travis/build/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR
+
+  - sed -i "s,/home/username/PEITS_root/petscBUILD,$PETSCPATH,g" config.opts
+  - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
+  
+  - sh INSTALL
+  
+  - cd tests
+  - sh ./initial_test.sh
+
