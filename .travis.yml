@@ -2,8 +2,8 @@ language: bash
 sudo: required
 
 before_install:
-  - apt-get -qq update
-  - apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev
   
 install:
   
