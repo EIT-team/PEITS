@@ -26,17 +26,17 @@ install:
   - cd Zoltan_v3.8/BUILD_DIR
 
 
-  - ../configure --prefix=/home/travis/build/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/PEITS/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/build/PEITS/PEITS_root/petscBUILD"
+  - ../configure --prefix=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD"
 
   - make everything
   - make install
   
 script:
-  - cd /home/travis/build/EIT_Team/PEITS
+  - cd /home/travis/build/EIT-team/PEITS
   - mv config.opts_example config.opts
 
-  - PETSCPATH=/home/travis/build/PEITS/PEITS_root/petscBUILD
-  - ZOLTANPATH=/home/travis/build/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR
+  - PETSCPATH=/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD
+  - ZOLTANPATH=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR
 
   - sed -i "s,/home/username/PEITS_root/petscBUILD,$PETSCPATH,g" config.opts
   - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
