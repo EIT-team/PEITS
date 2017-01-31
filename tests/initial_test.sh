@@ -37,4 +37,5 @@ then
 	echo file sizes match - test OK
 else
 	echo file sizes do not match, test failed
+	exit 1
 fi
