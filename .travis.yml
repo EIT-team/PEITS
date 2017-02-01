@@ -26,7 +26,7 @@ install:
   - cd Zoltan_v3.8/BUILD_DIR
 
 
-  - ../configure --prefix=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/lib" --with-mpi="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD"
+  - ../configure --prefix=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/lib"
 
   - make everything
   - make install
