@@ -15,7 +15,7 @@ install:
   - git checkout 8695de0
 
 
-  - ./configure --prefix=/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes --download-blacs=yes && make all test && make install
+  - ./configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes --download-blacs=yes && make all test && make install
 
 
   - cd ..
@@ -26,17 +26,17 @@ install:
   - cd Zoltan_v3.8/BUILD_DIR
 
 
-  - ../configure --prefix=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/include" --with-parmetis-libdir="/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD/lib"
+  - ../configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/include" --with-parmetis-libdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/lib"
 
   - make everything
   - make install
   
 script:
-  - cd /home/travis/build/EIT-team/PEITS
+  - cd $TRAVIS_BUILD_DIR
   - mv config.opts_example config.opts
 
-  - PETSCPATH=/home/travis/build/EIT-team/PEITS/PEITS_root/petscBUILD
-  - ZOLTANPATH=/home/travis/build/EIT-team/PEITS/PEITS_root/Zoltan_v3.8/BUILD_DIR
+  - PETSCPATH=$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD
+  - ZOLTANPATH=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.8/BUILD_DIR
 
   - sed -i "s,/home/username/PEITS_root/petscBUILD,$PETSCPATH,g" config.opts
   - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
