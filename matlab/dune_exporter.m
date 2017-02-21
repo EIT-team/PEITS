@@ -41,10 +41,18 @@ gndpos = set_ground_force(Nodes, srf, groundposition, 1);
 
 % Find if conductivity is already correct or needs interpretation by forward
 % solver (if all are integers)
-if (isempty(find(mod(sigma,1),1)))
+if isinteger(sigma)
     isInt = 1;
 else
     isInt = 0;
+    
+    % Check for case where sigma values are all whole numbers, but stored
+    % as a double rather than an int.
+    if (isempty(find(mod(sigma,1),1)))
+        disp('INFO: All conductivity values are whole numbers.')
+        disp('If these are supposed to be material reference (mat_refs) rather than absolute conducitivty values, convet sigma to integer representation')
+        disp('(e.g. int8(sigma)) before passing to function')
+    end
 end
 
 format longg
