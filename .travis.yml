@@ -3,7 +3,7 @@ sudo: required
 
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev openmpi-dev
+  - sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev libopenmpi-dev
   
 install:
   - mkdir PEITS_root
