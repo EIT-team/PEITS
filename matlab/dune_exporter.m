@@ -90,8 +90,8 @@ fprintf(paramfile, ['fem.io.macroGrid: ' filename '\n\n']);
 fprintf(paramfile, ['electrode.use_node_assignment: false\n\n']);
 
 fprintf(paramfile, ['electrode.positions: ../data/electrode_positions_' filename(1:end-4) '\n\n']);  % You might have to adjust this line later if you use different electrode positions!!
-fprintf(paramfile, ['electrode.nodes: ../data/electrode_nodes_TA052_meters']); % If electrodes should be defined by nodes, change this file
-fprintf(paramfile, ['surface.coordinates: ../data/surface_coordinates_TA052_precise']);
+fprintf(paramfile, ['electrode.nodes: ../data/electrode_nodes_TA052_meters\n']); % If electrodes should be defined by nodes, change this file
+fprintf(paramfile, ['surface.coordinates: ../data/surface_coordinates_TA052_precise\n\n']);
 
 fprintf(paramfile, 'ground.hsquared: 1.5e-5\n');  % Also here you can let go of your creativity.
 fprintf(paramfile, ['groundposition.x: ' num2str(gndpos(1), '%6.18f') '\n']);
