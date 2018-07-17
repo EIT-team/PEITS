@@ -13,7 +13,7 @@ cp parameterBU parameter
 cp standardparamsBU standardparams
 
 #mesh name
-sed -i 's/.*mesh: TA052_meters.*/mesh: NNsmall/' parameter
+sed -i 's/.*mesh: TA052_meters.*/mesh: NNmesh_small/' parameter
 #mesh parameter file
 sed -i 's/.*paramfile:.*/\paramfile: ..\/data\/\$(mesh).parameters/' parameter
 #conductivities
