@@ -42,7 +42,10 @@ script:
   - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
   
   - sh INSTALL
-  
+  # repeat the test a few times to see if we get the slow down on assumbling the system matrix
   - cd tests
+  - sh ./initial_test.sh
+  - sh ./initial_test.sh
+  - sh ./initial_test.sh
   - sh ./initial_test.sh
 
