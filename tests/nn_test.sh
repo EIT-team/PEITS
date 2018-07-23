@@ -11,6 +11,8 @@
 cd ../data
 cp parameterBU parameter
 cp standardparamsBU standardparams
+cp NN2016_Prt_full.txt NN2016_Prt_full.txtBU
+head NN2016_Prt_full.txtBU > NN2016_Prt_full.txt
 
 #mesh name
 sed -i 's/.*mesh: TA052_meters.*/mesh: NNmesh_small/' parameter
