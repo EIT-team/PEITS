@@ -15,9 +15,9 @@ cp standardparamsBU standardparams
 #mesh name
 sed -i 's/.*mesh: TA052_meters.*/mesh: NNmesh_small/' parameter
 #mesh parameter file
-sed -i 's/.*paramfile:.*/\paramfile: ..\/data\/\$(mesh).parameters/' parameter
+sed -i 's/.*paramfile: ..\/data\/p.*/\paramfile: ..\/data\/\$(mesh).parameters/' parameter
 #conductivities
-sed -i 's/.*conductivities:.*/conductivities: NNconductivities/' parameter
+sed -i 's/.*conductivities:.*/conductivities: ..\/data\/NNconductivities/' parameter
 #current protocol
 sed -i 's/current_protocol_TA052.txt/NN2016_Prt_full.txt/' parameter
 
@@ -25,6 +25,7 @@ sed -i 's/current_protocol_TA052.txt/NN2016_Prt_full.txt/' parameter
 sed -i 's/133.0e-6/240.0e-6/' standardparams
 sed -i 's/contact.impedance: 1000/contact.impedance: 200/' standardparams
 sed -i 's/electrode.diameter: 7.0/electrode.diameter: 10.0/' standardparams
+sed -i 's/electrode.diameter_file:.*/electrode.diameter_file: none/' standardparams
 
 
 
