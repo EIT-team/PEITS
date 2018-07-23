@@ -51,6 +51,10 @@ script:
   - cp parameter parameterBU
   - cp standardparams standardparamsBU
   - cd ../tests
+<<<<<<< HEAD
   - travis_wait 30 sh ./nn_test.sh
+=======
+  - travis wait 30 sh ./nn_test.sh
+>>>>>>> ef7a2b5f922f659782352826cdef7e1973b6438d
 
 
