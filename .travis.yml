@@ -52,5 +52,6 @@ script:
   - cp standardparams standardparamsBU
   - cd ../tests
   - travis_wait 30 sh ./nn_test.sh
+  - travis_wait 30 sh ./nn_test.sh
 
 
