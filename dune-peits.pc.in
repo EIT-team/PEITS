@@ -10,6 +10,6 @@ Name: @PACKAGE_NAME@
 Version: @VERSION@
 Description: dune-peits module
 URL: http://dune-project.org/
-Requires: dune-common dune-geometry dune-grid dune-istl dune-localfunctions dune-fem dune-alugrid
-Libs: -L
-Cflags: -I
+Requires: dune-common dune-geometry dune-grid dune-alugrid dune-fem
+Libs: -L${libdir}
+Cflags: -I${includedir}

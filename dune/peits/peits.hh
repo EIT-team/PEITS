@@ -1,6 +1,6 @@
-#ifndef DUNE_peits.hh
-#define DUNE_peits.hh
+#ifndef DUNE_PEITS_HH
+#define DUNE_PEITS_HH
 
 // add your classes here
 
-#endif // DUNE_peits.hh
+#endif // DUNE_PEITS_HH

@@ -19,12 +19,20 @@ public:
 
   // types for boundary treatment
   // ----------------------------
-  typedef typename DiscreteFunctionSpaceType :: BlockMapperType MapperType; //markus
-  typedef Fem::SlaveDofs< DiscreteFunctionSpaceType, MapperType > SlaveDofsType;
-  typedef typename SlaveDofsType :: SingletonKey SlaveDofsKeyType; 
-  typedef Fem::SingletonList< SlaveDofsKeyType, SlaveDofsType >
-      SlaveDofsProviderType;
+  // typedef typename DiscreteFunctionSpaceType :: BlockMapperType MapperType; //markus
+  // typedef Fem::SlaveDofs< DiscreteFunctionSpaceType, MapperType > SlaveDofsType;
+  // typedef typename SlaveDofsType :: SingletonKey SlaveDofsKeyType; 
+  // typedef Fem::SingletonList< SlaveDofsKeyType, SlaveDofsType > SlaveDofsProviderType;
 
+  // typedef FunctionSpaceTraits Traits;
+  // typedef DiscreteFunctionSpaceInterface< Traits > BaseType;
+  typedef DiscreteFunctionSpaceType BaseType;
+  // typedef typename BaseType :: GridPartType GridPartType;
+  typedef typename BaseType::BlockMapperType BlockMapperType;
+  typedef typename BaseType::SlaveDofsType SlaveDofsType;
+  typedef Fem::SingletonList< std::pair< GridPartType *, BlockMapperType >, std::pair< SlaveDofsType, int > > SlaveDofsProviderType;
+
+  
   DirichletConstraints( const ModelType &model, const DiscreteFunctionSpaceType& space )
     : model_(model),
       space_( space ),
@@ -416,7 +424,8 @@ protected:
   // return slave dofs         
   static SlaveDofsType *getSlaveDofs ( const DiscreteFunctionSpaceType &space )
   {
-    SlaveDofsKeyType key( space, space.blockMapper() );  //markus
+    // SlaveDofsKeyType key( space, space.blockMapper() );  //markus
+    std::pair< GridPartType *, BlockMapperType * > key( space, space.blockMapper() );  //markus
     return &(SlaveDofsProviderType :: getObject( key ));
   }
 

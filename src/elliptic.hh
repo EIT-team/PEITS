@@ -106,7 +106,7 @@ protected:
   typedef typename EntityType::Geometry       GeometryType;
 
   typedef typename EntityType::EntitySeed EntitySeed;
-  typedef typename EntityType::EntityPointer EntityPointer;
+  // typedef typename EntityType::EntityPointer EntityPointer;
 
   typedef typename DiscreteFunctionSpaceType::DomainType DomainType;
 
@@ -182,8 +182,9 @@ public:
             // fill the stencil
             for( unsigned int electrodeiterator = 0; electrodeiterator < electrodeElements_[electrodenumber-1].size(); ++electrodeiterator)
             {
-              EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
-              const EntityType &entitySecond = *ep;
+              // EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
+              // const EntityType &entitySecond = *ep;
+              const EntityType &entitySecond = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
               // fill in the 'diagonal' part
               stencil_.fill( entity, entitySecond );
               stencil_.fill( entitySecond, entity);
@@ -354,9 +355,10 @@ void DifferentiableEllipticOperator< JacobianOperator, Model >
         /////////// Second iteration over all elements with surfaces under the selected electrode
         for( unsigned int electrodeiterator = 0; electrodeiterator < electrodeElements_[electrodenumber-1].size(); ++electrodeiterator)
         {
-          EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
-          const EntityType &entitySecond = *ep;
-
+          // EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
+          // const EntityType &entitySecond = *ep;
+          const EntityType &entitySecond = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
+          
           LocalMatrixType jLocalToGlobal = jOp.localMatrix( entitySecond, entity );
 
           const IntersectionIteratorType endiitSecond = gridPart.iend( entitySecond );

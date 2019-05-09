@@ -4,7 +4,7 @@
 
 #Name of the module
 Module: dune-peits
-Version: 0.1
-Maintainer: markus.jehl.11@ucl.ac.uk
-#depending on 
-Depends: dune-common dune-geometry dune-grid dune-fem dune-alugrid
+Version: 1.0
+Maintainer: r.guichard@ucl.ac.uk
+#depending on
+Depends: dune-common dune-geometry dune-grid dune-alugrid dune-fem
