@@ -19,7 +19,8 @@ RUN apt-get install -y \
     libopenmpi-dev \
     pkg-config \
     m4 \
-    automake
+    libmetis-dev \
+    libparmetis-dev
 
 # Install PETSc from packet manager
 RUN apt-get install -y petsc-dev
