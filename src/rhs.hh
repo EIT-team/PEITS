@@ -128,7 +128,6 @@ void calculateElecPot ( const DiscreteFunction &solution, const int pattern_inde
   typedef typename DiscreteFunctionSpaceType::IteratorType IteratorType;
   typedef typename IteratorType::Entity EntityType;
   typedef typename EntityType::Geometry GeometryType;
-  typedef typename EntityType::EntityPointer EntityPointer;
 
   typedef typename DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef typename GridPartType::IntersectionIteratorType IntersectionIteratorType;

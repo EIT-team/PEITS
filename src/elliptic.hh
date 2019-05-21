@@ -184,7 +184,7 @@ public:
             {
               // EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
               // const EntityType &entitySecond = *ep;
-              const EntityType &entitySecond = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
+              const EntityType &entitySecond = gridPart.grid().entity(electrodeElements_[electrodenumber-1][electrodeiterator]);
               // fill in the 'diagonal' part
               stencil_.fill( entity, entitySecond );
               stencil_.fill( entitySecond, entity);
@@ -357,7 +357,7 @@ void DifferentiableEllipticOperator< JacobianOperator, Model >
         {
           // EntityPointer ep = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
           // const EntityType &entitySecond = *ep;
-          const EntityType &entitySecond = gridPart.grid().entityPointer(electrodeElements_[electrodenumber-1][electrodeiterator]);
+          const EntityType &entitySecond = gridPart.grid().entity(electrodeElements_[electrodenumber-1][electrodeiterator]);
           
           LocalMatrixType jLocalToGlobal = jOp.localMatrix( entitySecond, entity );
 
