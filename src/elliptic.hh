@@ -254,8 +254,8 @@ void DifferentiableEllipticOperator< JacobianOperator, Model >
   jOp.reserve(stencil_);
   jOp.clear();
 
-  std::vector< typename LocalFunctionType::RangeType > phi( dfSpace.mapper().maxNumDofs() );
-  std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace.mapper().maxNumDofs() );
+  std::vector< typename LocalFunctionType::RangeType > phi( dfSpace.blockMapper().maxNumDofs() );
+  std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace.blockMapper().maxNumDofs() );
 
   const IteratorType end = dfSpace.end();
   for( IteratorType it = dfSpace.begin(); it != end; ++it )
