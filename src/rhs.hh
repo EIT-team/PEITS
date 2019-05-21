@@ -318,7 +318,7 @@ struct JacobianRowCalculator
     : dfSpace_(dummyFunction.space().gridPart()),
       electrodes_(electrodes)
   {
-    std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace_.mapper().maxNumDofs() );
+    std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace_.blockMapper().maxNumDofs() );
   
     const GridPartType& gridPart = dfSpace_.gridPart();
 
