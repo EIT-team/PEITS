@@ -524,9 +524,7 @@ struct JacobianRowCalculator
     {
       for( unsigned int electrodeiterator = 0; electrodeiterator < electrodeElements[electrode].size(); ++electrodeiterator)
       {
-        // EntityPointer ep = gridPart.grid().entityPointer(electrodeElements[electrode][electrodeiterator]);        
-        // const EntityType &entity = *ep;
-        const EntityType &entity = gridPart.grid().entityPointer(electrodeElements[electrode][electrodeiterator]);
+        const EntityType &entity = gridPart.grid().entity(electrodeElements[electrode][electrodeiterator]);
 
         int intersection_counter = 0;
         const IntersectionIteratorType endiit = gridPart.iend( entity );
