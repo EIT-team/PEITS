@@ -50,7 +50,6 @@ public:
       rhs_(problem_),
       bndD_(problem_),
       bndN_(problem_),
-      penalty_(Dune::Fem::Parameter::getValue<double>("dg.penalty")),
       sigma_(sigma),
       elementID_(elementID),
       uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" )),
@@ -254,12 +253,6 @@ public:
     return RightHandSideType( "right hand side", rhs_, gridPart_, 5 );
   }
 
-  //! penalty parameter for DG methods
-  double penalty() const
-  {
-    return penalty_;
-  }
-
   // Public custom attributes for the EIT model
   int error_;
   
@@ -302,7 +295,6 @@ protected:
   FunctionWrapper<rhs> rhs_;
   FunctionWrapper<bndD> bndD_;
   FunctionWrapper<bndN> bndN_;
-  double penalty_;
   // Protected custom attributes for the EIT model
   const SigmaFunctionType sigma_;
   const SigmaFunctionType elementID_;
