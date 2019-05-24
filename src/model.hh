@@ -134,7 +134,16 @@ public:
 	  sigmavalue = value_;
       } 
   }
-  
+
+  template< class Entity >
+  void elementID( const Entity &entity,
+                   RangeType &elementID ) const
+  {
+    elementID = elementID_.localFunction(entity)[0] - 1;
+  }
+
+
+  // ------- End of custom methods -------
   
   // Base model methods
   template< class Entity, class Point >
