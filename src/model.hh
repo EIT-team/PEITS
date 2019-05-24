@@ -54,7 +54,13 @@ public:
       sigma_(sigma),
       elementID_(elementID),
       uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" )),
-      uniformCondValue_(Dune::Fem::Parameter::getValue< double >( "fem.uniform_conductivity_value" ) )
+      uniformCondValue_(Dune::Fem::Parameter::getValue< double >( "fem.uniform_conductivity_value" )),
+      assignCond_(Dune::Fem::Parameter::getValue< bool >( "fem.assign_conductivities" )),
+      havePerturbation_(Dune::Fem::Parameter::getValue< bool >( "mesh.perturbation" )),
+      pertRadius_(Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.radius" )),
+      multORabs_(Dune::Fem::Parameter::getValue< bool >( "mesh.perturbation.multORabs" )),
+      value_(Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.value" )),
+      pertcenter_(3)
   {
   }
 
@@ -216,6 +222,13 @@ protected:
   const SigmaFunctionType elementID_;
   const bool uniformCond_;
   const bool uniformCondValue_;
+  const bool assignCond_;
+  const bool havePerturbation_;
+  const double pertRadius_;
+  const bool multORabs_;
+  const double value_;
+  std::vector<double> pertcenter_;
+  std::vector<double> conductivities_;
 };
 
 #endif // #ifndef ELLIPTC_MODEL_HH
