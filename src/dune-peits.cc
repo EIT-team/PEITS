@@ -45,7 +45,7 @@
 using namespace Dune;
 
 template <class HGridType>
-double algorithm (HGridType grid,
+double algorithm (HGridType &grid,
                   Dune::DynamicVector<double> &sigmavector,
                   Dune::DynamicVector<double> &elementIDvector,
                   int step,
@@ -641,7 +641,7 @@ int main(int argc, char** argv)
     /////////  SECTION: RUN ALGORITHM AS MANY TIMES AS REQUESTED IN PARAMETER FILE
 
     // calculate first step
-    algorithm < HGridType > ( grid, eldat, elementID, false, electrodes, current_protocol);
+    algorithm ( grid, eldat, elementID, false, electrodes, current_protocol);
 
     if( myRank == 0 )
       {
