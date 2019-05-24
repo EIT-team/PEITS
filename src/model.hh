@@ -51,7 +51,8 @@ public:
       bndD_(problem_),
       bndN_(problem_),
       penalty_(Dune::Fem::Parameter::getValue<double>("dg.penalty")),
-      sigma_(sigma)
+      sigma_(sigma),
+      elementID_(elementID)
   {
   }
 
@@ -210,6 +211,7 @@ protected:
   FunctionWrapper<bndN> bndN_;
   double penalty_;
   const SigmaFunctionType sigma_;
+  const SigmaFunctionType elementID_;
 };
 
 #endif // #ifndef ELLIPTC_MODEL_HH
