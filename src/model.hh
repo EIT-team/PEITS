@@ -53,7 +53,8 @@ public:
       penalty_(Dune::Fem::Parameter::getValue<double>("dg.penalty")),
       sigma_(sigma),
       elementID_(elementID),
-      uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" ))
+      uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" )),
+      uniformCondValue_(Dune::Fem::Parameter::getValue< double >( "fem.uniform_conductivity_value" ) )
   {
   }
 
@@ -214,6 +215,7 @@ protected:
   const SigmaFunctionType sigma_;
   const SigmaFunctionType elementID_;
   const bool uniformCond_;
+  const bool uniformCondValue_;
 };
 
 #endif // #ifndef ELLIPTC_MODEL_HH
