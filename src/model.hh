@@ -52,7 +52,8 @@ public:
       bndN_(problem_),
       penalty_(Dune::Fem::Parameter::getValue<double>("dg.penalty")),
       sigma_(sigma),
-      elementID_(elementID)
+      elementID_(elementID),
+      uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" ))
   {
   }
 
@@ -212,6 +213,7 @@ protected:
   double penalty_;
   const SigmaFunctionType sigma_;
   const SigmaFunctionType elementID_;
+  const bool uniformCond_;
 };
 
 #endif // #ifndef ELLIPTC_MODEL_HH
