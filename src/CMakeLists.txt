@@ -1,6 +1,6 @@
 # Some variables that need to be passed for compilation
 # and grid definition
-if( NOT POLORDER)
+if( NOT POLORDER )
   set( POLORDER 1)
 endif()
 
@@ -9,11 +9,11 @@ if( NOT GRIDTYPE )
 endif()
 
 if( NOT GRIDDIM )
-  set( GRIDDIM 2 )
+  set( GRIDDIM 3 )
 endif()
 
-if( NOT WORLDDIM)
-  set( WORLDDIM 2)
+if( NOT WORLDDIM )
+  set( WORLDDIM 3 )
 endif()
 
 # the default compiler flags
