@@ -62,6 +62,31 @@ public:
       value_(Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.value" )),
       pertcenter_(3)
   {
+    pertcenter_[0]=Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.pos_x" );
+    pertcenter_[1]=Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.pos_y" );
+    pertcenter_[2]=Dune::Fem::Parameter::getValue< double >( "mesh.perturbation.pos_z" );
+
+    // load the conductivity values of the different tissues
+    const string filename = Dune::Fem::Parameter::getValue< string >( "conductivities" );
+    error_ = 0;
+    FILE *F = 0;
+    F = fopen(filename.c_str(), "r");
+    if (F == NULL)
+      {
+	cout << "Conductivities file could not be loaded!" << endl;
+	error_ = 1;
+	return;
+      }
+
+    while(!feof(F))
+      {
+	double c;
+	int error = fscanf(F, "%lf\n", &c);
+	if (!error)
+	  cout << "File could not be read: " << filename << endl;
+	conductivities_.push_back(c);
+      }
+    fclose(F);
   }
 
   template< class Entity, class Point >
@@ -178,6 +203,9 @@ public:
     return penalty_;
   }
 
+  // Public custom attributes for the EIT model
+  int error_;
+  
 protected:
   template <FunctionId id>
   class FunctionWrapper : public Dune::Fem::Function< FunctionSpaceType, FunctionWrapper< id > >
@@ -218,6 +246,7 @@ protected:
   FunctionWrapper<bndD> bndD_;
   FunctionWrapper<bndN> bndN_;
   double penalty_;
+  // Protected custom attributes for the EIT model
   const SigmaFunctionType sigma_;
   const SigmaFunctionType elementID_;
   const bool uniformCond_;
