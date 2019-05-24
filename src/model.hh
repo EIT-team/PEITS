@@ -34,13 +34,12 @@ struct DiffusionModel
   static const bool isSymmetric = true;
 
 protected:
-  enum FunctionId { rhs, bndD, bndN };
+  enum FunctionId { rhs, bndD };
   template <FunctionId id>
   class FunctionWrapper;
 public:
   typedef Dune::Fem::GridFunctionAdapter< FunctionWrapper<rhs>, GridPartType > RightHandSideType;
   typedef Dune::Fem::GridFunctionAdapter< FunctionWrapper<bndD>, GridPartType > DirichletBoundaryType;
-  typedef Dune::Fem::GridFunctionAdapter< FunctionWrapper<bndN>, GridPartType > NeumanBoundaryType;
 
   //! constructor taking problem reference
   DiffusionModel( const ProblemType& problem, const GridPart &gridPart,
@@ -49,7 +48,6 @@ public:
       gridPart_(gridPart),
       rhs_(problem_),
       bndD_(problem_),
-      bndN_(problem_),
       sigma_(sigma),
       elementID_(elementID),
       uniformCond_(Dune::Fem::Parameter::getValue< bool >( "fem.uniform_conductivity" )),
@@ -242,10 +240,6 @@ public:
   {
     return DirichletBoundaryType( "boundary function", bndD_, gridPart_, 5 );
   }
-  NeumanBoundaryType neumanBoundary( ) const
-  {
-    return NeumanBoundaryType( "boundary function", bndN_, gridPart_, 5 );
-  }
 
   // return Fem :: Function for right hand side
   RightHandSideType rightHandSide(  ) const
@@ -278,11 +272,6 @@ protected:
         // call dirichlet boudary data of implementation
         impl_.g( x, ret );
       }
-      else if( id == bndN )
-      {
-        // call dirichlet boudary data of implementation
-        impl_.n( x, ret );
-      }
       else
       {
         DUNE_THROW(Dune::NotImplemented,"FunctionId not implemented");
@@ -294,7 +283,6 @@ protected:
   const GridPart &gridPart_;
   FunctionWrapper<rhs> rhs_;
   FunctionWrapper<bndD> bndD_;
-  FunctionWrapper<bndN> bndN_;
   // Protected custom attributes for the EIT model
   const SigmaFunctionType sigma_;
   const SigmaFunctionType elementID_;
