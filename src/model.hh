@@ -87,8 +87,56 @@ public:
 	conductivities_.push_back(c);
       }
     fclose(F);
+  } // End of constructor
+
+  // Public custom methods for the EIT model
+  template< class Entity >
+  void sigmaValue( const Entity &entity,
+		   RangeType &sigmavalue ) const
+  {
+    if (uniformCond_)
+      {
+	sigmavalue = uniformCondValue_;
+	if (havePerturbation_)
+	  applyPerturbation(entity.geometry().center(), sigmavalue);
+	return;
+      }
+
+    sigmavalue = sigma_.localFunction(entity)[0];
+    
+    if (!assignCond_)
+      {
+	if (havePerturbation_)
+	  applyPerturbation(entity.geometry().center(), sigmavalue);
+	return;
+      }
+
+    sigmavalue = conductivities_[sigmavalue-1];
+
+    if (havePerturbation_)
+      applyPerturbation(entity.geometry().center(), sigmavalue);
   }
 
+  template< class CenterType >
+  void applyPerturbation( const CenterType &center,
+			  RangeType &sigmavalue ) const
+  {
+    CenterType electrodecenter(center);
+
+    double radius = pertRadius_/1000;
+    //electrodecenter -= center;
+    electrodecenter[0] -= pertcenter_[0]; electrodecenter[1] -= pertcenter_[1]; electrodecenter[2] -= pertcenter_[2];
+    if( electrodecenter.two_norm() < radius )
+      {
+	if (multORabs_)
+	  sigmavalue *= value_;
+	else
+	  sigmavalue = value_;
+      } 
+  }
+  
+  
+  // Base model methods
   template< class Entity, class Point >
   void source ( const Entity &entity,
                 const Point &x,
