@@ -33,7 +33,7 @@ else
     nrows=totrows;
 end
 
-disp(['generating ',num2str(nrows),'x',num2str(ncols),' matrix.']);
+disp(['Reading ',num2str(nrows),'x',num2str(ncols),' Jacobian matrix.']);
 v = fread(fid,nrows*ncols,'double');
 A = zeros(nrows,ncols);
 

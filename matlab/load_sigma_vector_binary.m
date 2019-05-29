@@ -13,14 +13,14 @@ end
 magicint = fread(fid,1,'int');
 magicdouble = fread(fid,1,'double');
 
-if (magicint~=111) | (magicdouble~=111.0)
+if (magicint~=111) || (magicdouble~=111.0)
     error(['magic numbers not read correctly, change the binary format in' ...
         ' this reading routine!']);
 end
 
 nentries = fread(fid,1,'int');
 
-disp(['generating and reading vector with ',num2str(nentries),' entries.']);
+disp(['Reading sigma vector with ',num2str(nentries),' entries.']);
 
 v = fread(fid,2*nentries,'double');
 
