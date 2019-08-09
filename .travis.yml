@@ -45,7 +45,7 @@ install:
                 --with-mumps=1 --download-mumps=yes \
                 --with-ml=1 --download-ml=yes \
                 --download-scalapack=yes --download-blacs=yes && \
-    make all test && make install
+    make && make install
 
   # Download, build and install Zoltan
   - cd $TRAVIS_BUILD_DIR/PEITS_root
