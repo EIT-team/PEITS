@@ -41,13 +41,13 @@
    git checkout 8695de0
    ./configure --prefix=${PEITS_root}/petscBUILD \
                --with-x=0 --with-debugging=0 \
-               -CFLAGS="-O3 -DNDEBUG -ffast-math" \
+               CFLAGS="-O3 -DNDEBUG -ffast-math" \
                --with-parmetis=1 --download-parmetis=yes \
+               --with-metis=1 --download-metis=yes \
                --with-hypre=1 --download-hypre=yes \
                --with-superlu_dist=1 --download-superlu_dist=yes \
                --with-mumps=1 --download-mumps=yes \
                --with-ml=1 --download-ml=yes \
-               --with-metis=1 --download-metis=yes \
                --download-scalapack=yes --download-blacs=yes
    ```
 

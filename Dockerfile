@@ -13,11 +13,14 @@ RUN git clone -b maint https://bitbucket.org/petsc/petsc && \
     cd petsc && git checkout 8695de0 && \
     mkdir petscBUILD && \
     ./configure --prefix=/usr \
-                --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" \
-                --with-parmetis=1 --with-hypre=1 --download-hypre=yes \
-                --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 \
-                --download-mumps=yes --with-ml=1 --download-ml=yes \
+                --with-x=0 --with-debugging=0 \
+                CFLAGS="-O3 -DNDEBUG -ffast-math" \
+                --with-parmetis=1 \
                 --with-metis=1 \
+                --with-hypre=1 --download-hypre=yes \
+                --with-superlu_dist=1 --download-superlu_dist=yes \
+                --with-mumps=1 --download-mumps=yes \
+                --with-ml=1 --download-ml=yes \
                 --download-scalapack=yes --download-blacs=yes && \
     make all && make install
 
