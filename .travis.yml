@@ -26,16 +26,15 @@ before_install:
   - test -n $CXX && unset CXX
 
 install:
-  - mkdir PEITS_root
-  - cd PEITS_root
+  - sudo mkdir /build
+  - cd /build
 
   # Download, build and install PETSc
-  - git clone -b maint https://bitbucket.org/petsc/petsc
+  - sudo git clone -b maint https://bitbucket.org/petsc/petsc
   - cd petsc
-  - mkdir petscBUILD
-  - git checkout 8695de0
+  - sudo git checkout 8695de0
   - |
-    ./configure --prefix=/usr \
+    sudo ./configure --prefix=/usr \
                 --with-x=0 --with-debugging=0 \
                 CFLAGS="-O3 -DNDEBUG -ffast-math" \
                 --with-parmetis=1 \
@@ -45,19 +44,19 @@ install:
                 --with-mumps=1 --download-mumps=yes \
                 --with-ml=1 --download-ml=yes \
                 --download-scalapack=yes --download-blacs=yes && \
-    make && make install
+    sudo make && sudo make install
 
   # Download, build and install Zoltan
-  - cd $TRAVIS_BUILD_DIR/PEITS_root
-  - wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
-  - tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
-  - mkdir Zoltan_v3.83/BUILD_DIR
-  - cd Zoltan_v3.83/BUILD_DIR
+  - cd /build
+  - sudo wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
+  - sudo tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
+  - sudo mkdir Zoltan_v3.83/zoltanBUILD
+  - cd Zoltan_v3.83/zoltanBUILD
   - |
-    ../configure --prefix=/usr \
+    sudo ../configure --prefix=/usr \
                  --with-parmetis --with-parmetis-incdir=/usr/include/ --with-parmetis-libdir=/usr/lib/ && \
-    make everything && \
-    make install
+    sudo make everything && \
+    sudo make install
   
 script:
   - cd $TRAVIS_BUILD_DIR
@@ -76,4 +75,8 @@ script:
   - travis_wait 30 sh ./nn_test.sh
   - travis_wait 30 sh ./nn_test.sh
 
-
+after_failure:
+  - echo "########## PETSc installation log ##########"
+  - cat /home/travis/build/EIT-team/PEITS/PEITS_root/petsc/arch-linux2-c-opt/lib/petsc/conf/make.log
+  - echo "########## PETSc configuration log ##########"
+  - cat /home/travis/build/EIT-team/PEITS/PEITS_root/petsc/arch-linux2-c-opt/lib/petsc/conf/configure.log

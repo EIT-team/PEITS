@@ -11,7 +11,6 @@ RUN docker-apt-install libblas-dev liblapack-dev gfortran libboost-dev \
 ########## Build PETSC ##########
 RUN git clone -b maint https://bitbucket.org/petsc/petsc && \
     cd petsc && git checkout 8695de0 && \
-    mkdir petscBUILD && \
     ./configure --prefix=/usr \
                 --with-x=0 --with-debugging=0 \
                 CFLAGS="-O3 -DNDEBUG -ffast-math" \
