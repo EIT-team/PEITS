@@ -7,25 +7,31 @@
    sudo apt-get install git gcc build-essential clang make autotools-dev \
                         autoconf automake libtool cmake scons pkg-config \
                         libblas-dev liblapack-dev gfortran libboost-dev \
-                        mpi-default-bin mpi-default-dev libgmp-dev libopenmpi-dev
+                        mpi-default-bin mpi-default-dev libgmp-dev libopenmpi-dev \
+                        gfortran autotools-dev automake libug-dev \
+                        libmetis-dev libparmetis-dev
    ```
 
 1. Create a new folder — e.g. PEITS_root (Parallel EIT Solver) where the modules
    will be installed.
 
    ```bash
-   mkdir PEITS_root
-   cd PEITS_root
+   PEITS_root=/path/where/you/want/to/install/PEITS_root
+   mkdir -p ${PEITS_root}
+   cd ${PEITS_root}
    ```
+   **Important** Change the `PEITS_root=/path/where/you/want/to/install/PEITS_root`
+   variable to reflect the actual location of the PEITS installation. /e.g./,
+   `PEITS_root=${HOME}/PEITS_root`.
 
 1. Download the PETSc library:
 
    ```bash
-   git clone -b maint https://bitbucket.org/petsc/petsc petsc
+   git clone -b maint https://bitbucket.org/petsc/petsc
    ```
-   This will create a _petsc_ subfolder in the PEITS_root directory.
+   This will create a `petsc` subfolder in the PEITS_root directory.
 
-1. The PETSc libary needs to be configured, from within the _pestc_ folder.
+1. The PETSc libary needs to be configured, from within the `pestc` folder.
    Installation has been tested using a previous version of PETSc (commit
    `8695de0` - the nearest release is v3.6.3), newer versions cause an error
    during configuration:
@@ -33,7 +39,7 @@
    ```bash
    cd petsc
    git checkout 8695de0
-   ./configure --prefix=/home/username/PEITS_root/petscBUILD \
+   ./configure --prefix=${PEITS_root}/petscBUILD \
                --with-x=0 --with-debugging=0 \
                -CFLAGS="-O3 -DNDEBUG -ffast-math" \
                --with-parmetis=1 --download-parmetis=yes \
@@ -44,11 +50,9 @@
                --with-metis=1 --download-metis=yes \
                --download-scalapack=yes --download-blacs=yes
    ```
-   
-   **Important** Change the `--prefix=/home/username/PEITS_root/petscBUILD` option
-   to reflect the actual location of the PEITS installation. e.g.
-   `--prefix=/home/tom/PEITS_root/petscBUILD`. The `petscBUILD` folder will be
-   created during the configuration process.
+
+   The `petscBUILD` folder will be created during the configuration process.
+
 
 1. Build the PETSc source code.
 
@@ -60,7 +64,7 @@
 1. Download Zoltan library (v3.83 required) and extract to the PEITS_root folder.
 
    ```bash
-   cd ..
+   cd ${PEITS_root}
    wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
    tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
    ```
@@ -73,19 +77,17 @@
    ```bash
    mkdir Zoltan_v3.83/BUILD_DIR
    cd Zoltan_v3.83/BUILD_DIR
-   ../configure --prefix=/home/username/PEITS_root/Zoltan_v3.83/BUILD_DIR \
-                --with-parmetis --with-parmetis-incdir="/home/username/PEITS_root/petscBUILD/include" \
-                --with-parmetis-libdir="/home/username/PEITS_root/petscBUILD/lib"
+   ../configure --prefix=${PEITS_root}/Zoltan_v3.83/BUILD_DIR \
+                --with-parmetis --with-parmetis-incdir=/usr/include/ \
+                --with-parmetis-libdir=/usr/lib
    make everything
    make install
    ```
    
-   As before, replace `/home/username/PEITS_root` with the PEITS path.
-
 1. Download Parallel EIT Solver (PEITS) code into PEITS_root folder:
 
    ```bash
-   cd ../..
+   cd ${PEITS_root}
    git clone https://github.com/EIT-team/PEITS
    ```
 
@@ -94,10 +96,14 @@
    the directory where `PEITS_root` is located, save the edited file as
    `config.opts`.
 
+   If you have installed metis and parmetis using the package manager as
+   described above, then you can remove the lines that refer to them: /i.e./,
+   `--with-metis=...` and `--with-parmetis=...`
+
 1. Run install script. Located in PEITS_root/PEITS/
 
    ```bash
-   sh INSTALL.sh
+   ./INSTALL.sh
    ```
 
    The most likely cause of failure at this step is errors in the `config.opts`
@@ -110,29 +116,26 @@
    file sizes).
    
    ```bash
-   cd /home/tom/PEITS_root/PEITS/tests # (change path as appropriate)
+   cd ${PEITS_root}/PEITS/tests
    sh initial_test.sh
    ```
    
    If the test is successful, `file sizes match - test OK` will be displayed,
    meaning the installation process _should_ have been carried out correctly.
    
-   If there is an error regarding loading libparmetis.so then we need to add the
+   If there is an error regarding loading `libparmetis.so` then we need to add the
    petsc library directory to the environmental path:
    
    ```bash
-   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/username/PEITS_root/petscBUILD/lib/
+   LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${PEITS_root}/petscBUILD/lib/
    export LD_LIBRARY_PATH
    ```
    
-   As previously, replace `/home/username/PEITS_root/` with the appropriate
-   location.
-
 1. Running PEITS. If installation has been completed successfully, the solver
-   can be called from the `PEITS_root/PEITS/src` folder:
+   can be called from the `${PEITS_root}/PEITS/src` folder:
 
    ```bash
-   cd /home/tom/PEITS_root/PEITS/src #  (change path as appropriate)
+   cd ${PEITS_root}/PEITS/src
    mpirun -np 2 ./dune_peits
    ```
    
@@ -141,7 +144,7 @@
    
    If the solver needs an unreasonably long time for the assembly of the system
    matrix, then the pre-allocation of memory in PETSc needs to be adjusted. In
-   _file `PEITS_root/PEITS/dune-fem-1.4.0/dune/fem/misc/petsc/petsccommon.hh` the
+   _file `${PEITS_root}/PEITS/dune-fem-1.4.0/dune/fem/misc/petsc/petsccommon.hh` the
    number of allocated non-zeros can be changed in the command
    `MatMPIAIJSetPreallocation(mat,100,PETSC_NULL,40,PETSC_NULL)`. A safe way of
    adjusting this is to use very high numbers (e.g. 1000 and 150) and then running
