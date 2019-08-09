@@ -21,6 +21,10 @@ addons:
       - libmetis-dev
       - libparmetis-dev
 
+before_install:
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
+
 install:
   - mkdir PEITS_root
   - cd PEITS_root
