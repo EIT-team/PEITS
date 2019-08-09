@@ -1,14 +1,26 @@
-language: bash
+language: cpp
+compiler: gcc
+os: linux
+dist: xenial
 sudo: required
 
-before_install:
-  - sudo apt-get -qq update
-  - |
-    sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev \
-                            mpi-default-bin mpi-default-dev libgmp-dev libopenmpi-dev \
-                            autotools-dev automake libug-dev gfortran \
-                            libmetis-dev libparmetis-dev
-  
+addons:
+  apt:
+    packages:
+      - libblas-dev
+      - liblapack-dev
+      - gfortran
+      - libboost-dev
+      - mpi-default-bin
+      - mpi-default-dev
+      - libgmp-dev
+      - libopenmpi-dev
+      - autotools-dev
+      - automake
+      - libug-dev
+      - libmetis-dev
+      - libparmetis-dev
+
 install:
   - mkdir PEITS_root
   - cd PEITS_root
