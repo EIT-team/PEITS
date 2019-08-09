@@ -48,7 +48,7 @@ RUN cp config.opts_example config.opts && \
         config.opts
 
 # Build PEITS
-RUN bash ./INSTALL
+RUN bash ./INSTALL.sh
 
 # Create User and set environment
 RUN useradd -ms /bin/bash peitsier
