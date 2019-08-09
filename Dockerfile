@@ -27,7 +27,7 @@ RUN git clone -b maint https://bitbucket.org/petsc/petsc && \
 ########## Build Zoltan ##########
 # NOTE - Because Zoltan doesn't allow to build on the source directory, it needs to go into zoltanBUILD
 #      - why does it need the path to incdir and libdir? it doesn't know how to look in the right place?
-RUN wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.8.tar.gz && \
+RUN wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz && \
     tar xf zoltan_distrib_v3.83.tar.gz && \
     mkdir Zoltan_v3.83/zoltanBUILD && cd Zoltan_v3.83/zoltanBUILD && \
     ../configure --prefix=/usr \
