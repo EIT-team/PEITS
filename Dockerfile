@@ -41,7 +41,7 @@ WORKDIR PEITS
 
 # Configure PEITS build
 RUN cp config.opts_example config.opts && \
-    sed -i -e '/^PETSCPATH/d' -e '/ZOLTANPATH/d' -e '/blas/d' -e '/fieldvector/d' \
+    sed -i -e '/^PETSCPATH/d' -e '/ZOLTANPATH/d' \
         -e '/with-metis/d' -e '/with-parmetis/d' \
         config.opts && \
     sed -i -e '1 a PETSCPATH="/usr/lib"' \
