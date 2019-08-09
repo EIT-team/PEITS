@@ -59,5 +59,3 @@ RUN cp /etc/zsh/newuser.zshrc.recommended /home/peitsier/.zshrc
 WORKDIR /mydata
 CMD ["zsh"]
 
-# docker build -t uclrits/peits:16.04 . # to build from the current Dockerfile
-# docker run -it --name oldpeits -v /full/localpath:/mydata  uclrits/peits:16.04
