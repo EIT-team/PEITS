@@ -83,7 +83,7 @@ public:
 	  const double zcoord = Dune::Fem::Parameter::getValue< double >( "groundposition.z" );
 	  if (fabs(x[0]-xcoord) + fabs(x[1]-ycoord) + fabs(x[2]-zcoord) < 1e-8)//1e-12
 	  {
-		  cout << "found ground node" << endl;
+      std::cout << "found ground node" << std::endl;
 		  return true;
 	  }
 	  else
