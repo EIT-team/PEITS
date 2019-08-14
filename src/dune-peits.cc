@@ -488,6 +488,28 @@ int main(int argc, char** argv)
           }
         ///////////////////////////////////////////////////
 
+        // /!\ WARNING /!\
+        // This part fails when running PEITS with MPI. After some thorough exploration
+        // (eCSE project with Tom Dowrick and James Avery eCSE13-11
+        // “Enabling high performance computing for Electrical Impedance Tomography (EIT)”.)
+        // and updating the dune-peits module to the newest version of Dune 2.6, PETSc and Zoltan,
+        // it appears that Dune 2.6 can call Zoltan through a `loadbalance_zoltan.hh` example file.
+        // Most of what follows is now embedded in a ZoltanLoadBalanceHandle class.
+        // When trying to use it, two main issues arise:
+        // 1 - The Zoltan_Set_Param, application defined functions, ZoltanPartitioning and
+        // HGraphData structs are different. PEITS ones can be found in the zoltan_interface.hh
+        // (for the most part)
+        // 2 - Creating the hypergraph. In the example, this is done through the
+        // `generateHypergraph` called in the `repartition` method. For the given grid provided by
+        // reading the TA052_meters.dgf file, the hypergraph is then used (not exactly how) when
+        // calling the Zoltan_LB_Partition. This latter crashes due to an enormous amount of
+        // memory request (>10^9 !). Trying to match the hypergraph to the one from PEITS
+        // (can be found in the zoltan_interface.hh) doesn't work as there are calls to failing
+        // methods in Dune (i.e. blah.getKey().extractKey(globalID);) and differences in
+        // populating the hypergraph with `electrodes` data.
+        // Lastly, using the loadbalance.hh from PEITS fails as it calls deprecated methods in Dune.
+
+        
         int rc;
         int changes, numGidEntries, numLidEntries, numImport, numExport;
         ZOLTAN_ID_PTR importGlobalGids, importLocalGids, exportGlobalGids, exportLocalGids;
