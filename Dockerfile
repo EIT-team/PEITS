@@ -1,7 +1,7 @@
-# FROM spack/ubuntu-bionic
+FROM spack/ubuntu-bionic
 LABEL maintainer="r.guichard@ucl.ac.uk"
 
-# Minimal dependencies for PEITS
+# Minimal dependencies
 RUN apt-get update && \
     apt-get install -y build-essential software-properties-common
 
