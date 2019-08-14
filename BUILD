@@ -1,0 +1,1 @@
+dune-common-2.6.0/bin/dunecontrol --opts=PEITS/PEITS/config.opts --module=dune-peits all
