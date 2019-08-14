@@ -12,7 +12,7 @@
 
 // adaptation ...
 #include <dune/fem/function/adaptivefunction.hh>
-#include <dune/fem/space/common/adaptmanager.hh>
+#include <dune/fem/space/common/adaptationmanager.hh>
 
 // include discrete function
 #include <dune/fem/function/blockvectorfunction.hh>
@@ -24,9 +24,10 @@
 
 #include <dune/fem/solver/istlsolver.hh>
 #include <dune/fem/solver/cginverseoperator.hh>
+#include <dune/fem/solver/krylovinverseoperators.hh>
 
 // lagrange interpolation 
-#include <dune/fem/operator/lagrangeinterpolation.hh>
+#include <dune/fem/space/lagrange/interpolation.hh>
 
 #include <dune/fem/misc/femtimer.hh>
 /*********************************************************/

@@ -1,0 +1,11 @@
+# CONFIGURE_FLAGS = "--enable-parallel"
+MAKE_FLAGS=-j4
+USE_ZOLTANLB=yes
+CMAKE_FLAGS="-DDUNE_GRID_GRIDTYPE_SELECTOR:BOOL=ON \ 
+	     -DCMAKE_BUILD_TYPE=Debug  \
+	     -DCMAKE_CXX_FLAGS='-g -O0'  \
+ 	     -DALLOW_CXXFLAGS_OVERWRITE=ON"
+             # -DALLOW_CXXFLAGS_OVERWRITE:BOOL=ON \
+             # -DMPI_C_COMPILE_FLAGS='-fexceptions -pthread' "
+	     # -DCMAKE_CXX_FLAGS='-g -O0 -Wall -Wextra -pedantic'  \
+ 	     
