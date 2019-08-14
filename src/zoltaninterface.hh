@@ -1,7 +1,7 @@
 #ifndef ZOLTANINTERFACE_HH 
 #define ZOLTANINTERFACE_HH
 
-#include <rhs.hh>
+#include "rhs.hh"
 
 typedef struct{      /* Zoltan will partition vertices, while minimizing edge cuts */
 
@@ -53,7 +53,7 @@ void write_hypergraph(int myRank, int numProcs, const GridType &grid, HGRAPH_DAT
   const GridView &gridView = grid.leafView();
   typedef typename GridView::template Codim< 0 >::template Partition< partition >::Iterator Iterator;
   typedef typename GridType::template Codim< 0 >::Entity Entity;
-  typedef typename Entity::EntityPointer EntityPointer;
+  // typedef typename Entity::Entity Entity;
 
   typedef typename GridView::IntersectionIterator IntersectionIterator;
   typedef typename IntersectionIterator::Intersection Intersection;
@@ -118,8 +118,8 @@ void write_hypergraph(int myRank, int numProcs, const GridType &grid, HGRAPH_DAT
       const Intersection &intersection = *iit;
       if( intersection.neighbor() )
 	    {
-        const EntityPointer pOutside = intersection.outside();
-		    const Entity &neighbor = *pOutside;
+        const Entity pOutside = intersection.outside();
+		    const Entity &neighbor = pOutside;
 		    gIdType blah = globalIdSet.id(neighbor);
 		    std::vector<int> globalID(NUM_GID_ENTRIES);
 		    blah.getKey().extractKey(globalID);

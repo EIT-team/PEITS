@@ -1,3 +1,5 @@
+src/*old.hh
+build-cmake
 config.opts
 src/.deps/dune_peits-dune_peits.Po
 Makefile

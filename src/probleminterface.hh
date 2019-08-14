@@ -9,6 +9,8 @@
 
 #include <dune/fem/io/parameter.hh>
 
+using namespace std;
+
 /** \brief problem interface class for problem descriptions, i.e. right hand side,
  *         boudnary data, and, if exsistent, an exact solution.
  */

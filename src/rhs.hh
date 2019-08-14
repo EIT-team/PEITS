@@ -38,7 +38,7 @@ void assembleRHS ( const Function &function, DiscreteFunction &rhs, int pattern_
   typedef typename DiscreteFunctionSpaceType::IteratorType IteratorType;
   typedef typename IteratorType::Entity EntityType;
   typedef typename EntityType::Geometry GeometryType;
-  typedef typename EntityType::EntityPointer EntityPointer;
+  // typedef typename EntityType::EntityPointer EntityPointer;
 
   typedef typename DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef typename GridPartType::IntersectionIteratorType IntersectionIteratorType;
@@ -128,7 +128,6 @@ void calculateElecPot ( const DiscreteFunction &solution, const int pattern_inde
   typedef typename DiscreteFunctionSpaceType::IteratorType IteratorType;
   typedef typename IteratorType::Entity EntityType;
   typedef typename EntityType::Geometry GeometryType;
-  typedef typename EntityType::EntityPointer EntityPointer;
 
   typedef typename DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef typename GridPartType::IntersectionIteratorType IntersectionIteratorType;
@@ -297,7 +296,7 @@ struct JacobianRowCalculator
   typedef typename IteratorType::Entity EntityType;
   typedef typename EntityType::Geometry GeometryType;
   typedef typename EntityType::EntitySeed EntitySeed;
-  typedef typename EntityType::EntityPointer EntityPointer;
+  // typedef typename EntityType::EntityPointer EntityPointer;
 
   typedef typename DiscreteFunctionSpaceType::GridPartType GridPartType;
   typedef typename GridPartType::IntersectionIteratorType IntersectionIteratorType;
@@ -318,7 +317,7 @@ struct JacobianRowCalculator
     : dfSpace_(dummyFunction.space().gridPart()),
       electrodes_(electrodes)
   {
-    std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace_.mapper().maxNumDofs() );
+    std::vector< typename LocalFunctionType::JacobianRangeType > dphi( dfSpace_.blockMapper().maxNumDofs() );
   
     const GridPartType& gridPart = dfSpace_.gridPart();
 
@@ -524,8 +523,7 @@ struct JacobianRowCalculator
     {
       for( unsigned int electrodeiterator = 0; electrodeiterator < electrodeElements[electrode].size(); ++electrodeiterator)
       {
-        EntityPointer ep = gridPart.grid().entityPointer(electrodeElements[electrode][electrodeiterator]);
-        const EntityType &entity = *ep;
+        const EntityType &entity = gridPart.grid().entity(electrodeElements[electrode][electrodeiterator]);
 
         int intersection_counter = 0;
         const IntersectionIteratorType endiit = gridPart.iend( entity );

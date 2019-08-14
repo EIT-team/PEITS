@@ -1,39 +1,15 @@
-/******************************************************************************
-
-  ALUGrid - a library providing a mesh manager supporting simplicial
-  and hexahedral meshes, local grid adaptivity for use in parallel
-  computations including dynamic load balancing.
-
-  Copyright (C) 1998 - 2002 Bernhard Schupp
-  Copyright (C) 1998 - 2002 Mario Ohlberger
-  Copyright (C) 2004 - 2012 Robert Kloefkorn
-  Copyright (C) 2005 - 2012 Andreas Dedner
-  Copyright (C) 2010 - 2012 Martin Nolte
-
-  The DUNE ALUGrid module is free software; you can redistribute it and/or
-  modify it under the terms of the GNU General Public License as
-  published by the Free Software Foundation; either version 2 of
-  the License, or (at your option) any later version.
-
-  The ALUGrid library is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License along
-  with this program; if not, write to the Free Software Foundation, Inc.,
-  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
-******************************************************************************/
-
 #ifndef PIECEWISEFUNCTION_HH
 #define PIECEWISEFUNCTION_HH
 
 #include <vector>
 #include <fstream>
+#include <memory>
 
+#include <dune/common/version.hh>
+#include <dune/common/dynvector.hh>
 #include <dune/grid/io/file/vtk/vtksequencewriter.hh>
 #include <dune/grid/common/datahandleif.hh>
+#include <dune/grid/utility/persistentcontainer.hh>
 
 // PiecewiseFunction
 // ----------
@@ -47,27 +23,69 @@
  *                  Furthermore we expect an axpy method on the class.
  */
 template< class View, class Range >
-class PiecewiseFunction      
-{ 
+class PiecewiseFunction
+{
   typedef PiecewiseFunction< View, Range > This;
 
 public:
   typedef View GridView;
+  typedef typename GridView :: Grid Grid;
   typedef Range RangeType;
 
   static const unsigned int order = 0;
 
-  typedef std::vector< RangeType > VectorType; 
+  class Data
+  {
+    RangeType val_;
+    bool visited_;
+  public:
+    Data () : val_( 0 ), visited_(false) {}
+
+    operator RangeType& () { return val_; }
+    operator const RangeType& () const { return val_; }
+
+    Data& operator *= ( const typename RangeType :: value_type& scalar )
+    {
+      val_ *= scalar;
+      return *this;
+    }
+    Data& operator /= ( const typename RangeType :: value_type& scalar )
+    {
+      val_ /= scalar;
+      return *this;
+    }
+
+    void axpy( const typename RangeType :: value_type& scalar,
+               const RangeType& other )
+    {
+      val_.axpy( scalar, other );
+    }
+
+    Data &operator=(const typename RangeType :: value_type& scalar)
+    {
+      val_ = scalar;
+      return *this;
+    }
+
+    bool visited () const { return visited_; }
+    void markVisited () { visited_ = true ; }
+  };
+
+#ifdef USE_VECTOR_FOR_PWF
+  typedef Dune :: DynamicVector< Data > VectorType;
+#else
+  typedef Dune :: PersistentContainer< Grid, Data > VectorType;
+#endif
 
   typedef typename GridView::template Codim< 0 >::Entity Entity;
   typedef typename Entity::Geometry Geometry;
-  typedef typename Geometry::LocalCoordinate DomainType;
   typedef typename Geometry::GlobalCoordinate GlobalType;
 
   /* vector of all dofs on an codim 0 entity */
   typedef RangeType LocalDofVector;
 
-private:
+// private:
+public:
   struct CommDataHandle;
 
 public:
@@ -77,17 +95,22 @@ public:
    */
   PiecewiseFunction( const GridView &gridView )
   : gridView_( gridView ),
+#ifdef USE_VECTOR_FOR_PWF
     dof_( gridView.indexSet().size( 0 ) )
+#else
+    dof_( gridView.grid(), 0 ) // codim 0
+#endif
   {}
 
-  const RangeType &operator[] ( const size_t &index ) const
+  /** \brief access the DoFs on one entity (of codimension 0)
+   *
+   *  \param[in]  entity  entity whose DoFs to access
+   *
+   *  \returns a reference to the DoFs of the entity
+   */
+  const RangeType &operator[] ( const Entity &entity ) const
   {
-    return dof_[ index ];
-  }
-
-  RangeType &operator[] ( const size_t &index )
-  {
-    return dof_[ index ];
+    return data(entity);
   }
 
   /** \brief access the DoFs on one entity (of codimension 0)
@@ -96,29 +119,24 @@ public:
    *
    *  \returns a reference to the DoFs of the entity
    */
-  const RangeType &operator[] ( const Entity &entity ) const;
-
-  /** \brief access the DoFs on one entity (of codimension 0)
-   *
-   *  \param[in]  entity  entity whose DoFs to access
-   *
-   *  \returns a reference to the DoFs of the entity
-   */
-  RangeType &operator[] ( const Entity &entity );
+  RangeType &operator[] ( const Entity &entity )
+  {
+    return data(entity);
+  }
 
   /** \brief evaluate the discrete function at an arbitrary point on the
-   *         reference element 
+   *         reference element
    *  \param entity the entity on which the function is to be evaluated
-   *  \param x      point on entity in local coordinate system
+   *  \param x      point on entity in global coordinate system
    */
-  RangeType evaluate ( const Entity &entity, const DomainType &x ) const
+  RangeType evaluate ( const Entity &entity, const GlobalType &x ) const
   {
     return (*this)[ entity ];
   }
 
   /** \brief obtain the size of the dof vector;
              might be larger that number of elements in grid view. */
-  size_t size() const 
+  size_t size() const
   {
     return dof_.size();
   }
@@ -172,7 +190,7 @@ public:
   /** \brief adapt the DoF vector to the size of the grid view */
   void resize();
 
-  /** \brief extract all DoFs on an entity 
+  /** \brief extract all DoFs on an entity
    *  \param[in] entity the entity
    *  \param[in] localDofs insert the DoFs into this storage vector
    */
@@ -196,7 +214,7 @@ public:
   /** \brief method to prolong the data to all children entities from a
    *  \param[in] father    the father entity
    *  \param[in] localDofs the storage vector where the prolonged
-   *                       data is to be stored 
+   *                       data is to be stored
    *                       (both the father data and
    *                       the child data stroage space can be accessed by
    *                       an \ operator[](const Entity&) method)
@@ -207,27 +225,44 @@ public:
   /** \brief copy interior cell data to overlap of ghost cells */
   void communicate ();
 
-private:  
+  bool visitElement ( const Entity& entity ) const
+  {
+    return !data(entity).visited();
+  }
+  bool visitNeighbor ( const Entity& entity, const Entity& neighbor ) const
+  {
+    return !data(neighbor).visited();
+  }
+  void visited( const Entity& entity )
+  {
+    data(entity).markVisited();
+  }
+  VectorType &container()
+  {
+    return dof_;
+  }
+
+private:
+  const Data &data ( const Entity &entity ) const
+  {
+#ifdef USE_VECTOR_FOR_PWF
+    return dof_[ gridView().indexSet().index(entity) ];
+#else
+    return dof_[ entity ];
+#endif
+  }
+  Data &data ( const Entity &entity )
+  {
+#ifdef USE_VECTOR_FOR_PWF
+    return dof_[ gridView().indexSet().index(entity) ];
+#else
+    return dof_[ entity ];
+#endif
+  }
   GridView gridView_;
   /* storage for dofs */
   VectorType dof_;
 };
-
-template< class View, class Range >
-inline const typename PiecewiseFunction< View, Range >::RangeType &
-PiecewiseFunction< View, Range >::operator[] ( const Entity &entity ) const
-{
-  assert( gridView().indexSet().contains( entity ) );
-  return dof_[ gridView().indexSet().index( entity ) ];
-}
-
-template< class View, class Range >
-inline typename PiecewiseFunction< View, Range >::RangeType &
-PiecewiseFunction< View, Range >::operator[] ( const Entity &entity )
-{
-  assert( gridView().indexSet().contains( entity ) );
-  return dof_[ gridView().indexSet().index( entity ) ];
-}
 
 template< class View, class Range >
 template< class ProblemData >
@@ -237,11 +272,6 @@ PiecewiseFunction< View, Range >::initialize ( const ProblemData &problemData )
   // resize data vector and set all data to zero
   resize();
 
-  /* first we extract the dimensions of the grid 
-  static const int dim = GridView::dimension;
-  static const int dimworld = GridView::dimensionworld;
-  */
-
   /* get type of iterator over leaf entities of codimension zero */
   typedef typename GridView::template Codim< 0 >::Iterator Iterator;
 
@@ -250,20 +280,21 @@ PiecewiseFunction< View, Range >::initialize ( const ProblemData &problemData )
   typedef typename GridView::template Codim< 0 >::Geometry Geometry;
 
   /* types of vectors */
-  typedef typename Geometry::LocalCoordinate DomainType;
   typedef typename Geometry::GlobalCoordinate GlobalType;
-
-// MJE
-  typedef typename GridView::IndexSet IndexSetType;
-  const IndexSetType &indexSet = gridView_.indexSet();
-// end MJE
 
   // loop over all entities
   const Iterator end = gridView().template end< 0 >();
   for( Iterator it = gridView().template begin< 0 >(); it != end; ++it )
-  {   
+  {
     const Entity &entity = *it;
-    (*this)[ entity ] = problemData[indexSet.index(*it)];//problemData.initial( baryCenter );  // MJE
+    const Geometry &geometry = entity.geometry();
+    // get barycenter (can be obtained also by geometry.center())
+    GlobalType baryCenter = geometry.corner( 0 );
+    const int corners = geometry.corners();
+    for( int i = 1; i < corners; ++i )
+      baryCenter += geometry.corner( i );
+    baryCenter /= corners;
+    (*this)[ entity ] = problemData.initial( baryCenter );
   }
 
   // copy data to ghosts
@@ -274,45 +305,53 @@ template< class View, class Range >
 inline void
 PiecewiseFunction< View, Range >::axpy ( const double &lambda, const This &other )
 {
-  const size_t size = dof_.size();
-  for( size_t i = 0; i < size; ++i )
-    (*this)[ i ].axpy( lambda, other[ i ] );
+  typedef typename VectorType :: Iterator Iterator ;
+  const Iterator end = dof_.end();
+  typename VectorType :: ConstIterator otherIt = other.dof_.begin();
+  for( Iterator it = dof_.begin(); it != end ; ++ it, ++otherIt )
+  {
+    (*it).axpy( lambda, (*otherIt) );
+  }
 }
 
 template< class View, class Range >
 inline void
 PiecewiseFunction< View, Range >::addAndScale ( const double &mu, const double &lambda, const This &other )
 {
-  const size_t size = dof_.size();
-  for( size_t i = 0; i < size; ++i )
+  typedef typename VectorType :: Iterator Iterator ;
+  const Iterator end = dof_.end();
+  typename VectorType :: ConstIterator otherIt = other.dof_.begin();
+  for( Iterator it = dof_.begin(); it != end ; ++ it, ++otherIt )
   {
-    (*this)[ i ] *= mu;
-    (*this)[ i ].axpy( lambda, other[ i ] );
+    (*it) *= mu;
+    (*it).axpy( lambda, (*otherIt) );
   }
 }
 
 template< class View, class Range >
 inline void PiecewiseFunction< View, Range >::clear ()
 {
-  const typename VectorType::iterator end = dof_.end();
-  for( typename VectorType::iterator it = dof_.begin(); it != end; ++it )
-    *it = RangeType( 0 );
+  std::fill( dof_.begin(), dof_.end(), Data() );
 }
 
 template< class View, class Range >
 inline void PiecewiseFunction< View, Range >::resize ()
 {
+#ifdef USE_VECTOR_FOR_PWF
   const size_t newSize = gridView().indexSet().size( 0 );
-  if( dof_.capacity() < newSize ) 
+  if( dof_.capacity() < newSize )
   {
     //const size_t reserveSize = ((size_t) ((double) 1.1 * newSize));
     const size_t reserveSize = newSize * (1024 + 128) / 1024;
-    // reserve some more  memory to avoid to much re-allocation 
+    // reserve some more  memory to avoid to much re-allocation
     // (possibly not required for std::vector)
     dof_.reserve( reserveSize );
   }
-  // resize to current size 
+  // resize to current size
   dof_.resize( newSize );
+#else
+  dof_.resize();
+#endif
 }
 
 template< class View, class Range >
@@ -337,20 +376,15 @@ inline void PiecewiseFunction< View, Range >
   const LocalDofMap &clocalDofs = localDofs;
   typedef typename Entity::HierarchicIterator HierarchicIterator;
 
-  LocalDofVector &fatherValue = localDofs[ father ];
+  typename LocalDofMap::Value &fatherValue = localDofs[ father ];
 
   double volume = 0;
+  // reset fatherValue to zero
+  fatherValue = 0;
 
   const int childLevel = father.level() + 1;
   const HierarchicIterator hend = father.hend( childLevel );
-  HierarchicIterator hit = father.hbegin( childLevel );
-  const Entity &child = *hit;
-  const double childVolume = child.geometry().volume();
-  fatherValue = clocalDofs[ child ];
-  fatherValue *= childVolume;
-  volume += childVolume;
-  ++hit;
-  for( ; hit != hend; ++hit )
+  for( HierarchicIterator hit = father.hbegin( childLevel ) ; hit != hend; ++hit )
   {
     const Entity &child = *hit;
     const double childVolume = child.geometry().volume();
@@ -371,7 +405,7 @@ inline void PiecewiseFunction< View, Range >
   const LocalDofMap &clocalDofs = localDofs;
   typedef typename Entity::HierarchicIterator HierarchicIterator;
 
-  const LocalDofVector &fatherValue = clocalDofs[ father ];
+  const typename LocalDofMap::Value &fatherValue = clocalDofs[ father ];
 
   const int childLevel = father.level() + 1;
   const HierarchicIterator hend = father.hend( childLevel );
@@ -400,7 +434,7 @@ template< class View, class Range >
 struct PiecewiseFunction< View, Range >::CommDataHandle
 : public Dune::CommDataHandleIF< CommDataHandle, Range >
 {
-  // type of communicated data (i.e. double) 
+  // type of communicated data (i.e. double)
   typedef RangeType DataType;
 
   //! constructor taking a PiecewiseFunction instance
@@ -408,40 +442,40 @@ struct PiecewiseFunction< View, Range >::CommDataHandle
   : data_( data )
   {}
 
-  //! see documentation in Dune::CommDataHandleIF 
+  //! see documentation in Dune::CommDataHandleIF
   bool contains ( int dim, int codim ) const
   {
     return (codim == 0);
   }
-  
-  //! see documentation in Dune::CommDataHandleIF 
+
+  //! see documentation in Dune::CommDataHandleIF
   bool fixedsize ( int dim, int codim ) const
   {
     return true;
   }
-  
-  //! see documentation in Dune::CommDataHandleIF 
+
+  //! see documentation in Dune::CommDataHandleIF
   template< class E >
   size_t size ( const E &e ) const
   {
-    return (Entity::codimension == 0 ? 1 : 0); 
+    return (Entity::codimension == 0 ? 1 : 0);
   }
-  
+
   //! see documentation in Dune::CommDataHandleIF (method for codim 0 entities)
   template< class Buffer >
   void gather ( Buffer &buffer, const Entity &entity ) const
-  { 
+  {
     buffer.write( data_[ entity ] );
   }
 
   //! see documentation in Dune::CommDataHandleIF (method for codim 0 entities)
   template< class Buffer >
   void scatter ( Buffer &buffer, const Entity &entity, size_t n )
-  { 
+  {
     // communication size is fixed, so we can check the sizes
     assert( n == size( entity ) );
-    
-    // read data from buffer 
+
+    // read data from buffer
     buffer.read( data_[ entity ] );
   }
 
@@ -458,7 +492,7 @@ struct PiecewiseFunction< View, Range >::CommDataHandle
     assert( n == size( entity ) );
   }
 private:
-  // data vector 
+  // data vector
   PiecewiseFunction< View, Range > &data_;
 };
 
@@ -475,7 +509,7 @@ public:
   typedef typename GridViewType :: template Codim< 0 >::Entity EntityType;
   typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
 
-  //! constructor taking discrete function 
+  //! constructor taking discrete function
   PartitioningData( const int rank ) : rank_( rank ) {}
 
   //! virtual destructor
@@ -499,6 +533,41 @@ public:
 
 private:
   const int rank_;
+};
+
+
+template <class GridViewType>
+class VolumeData
+  : public Dune::VTKFunction< GridViewType >
+{
+  typedef VolumeData   ThisType;
+
+public:
+  typedef typename GridViewType :: template Codim< 0 >::Entity EntityType;
+  typedef typename EntityType::Geometry::LocalCoordinate LocalCoordinateType;
+
+  //! constructor taking discrete function
+  VolumeData() {}
+
+  //! virtual destructor
+  virtual ~VolumeData () {}
+
+  //! return number of components
+  virtual int ncomps () const { return 1; }
+
+  //! evaluate single component comp in
+  //! the entity
+  virtual double evaluate ( int comp, const EntityType &e, const LocalCoordinateType &xi ) const
+  {
+    //return e.geometry().volume();
+    return double( e.level() );
+  }
+
+  //! get name
+  virtual std::string name () const
+  {
+    return std::string( "level" );
+  }
 };
 
 
@@ -526,38 +595,45 @@ struct VTKData< PiecewiseFunction< GridView, Dune::FieldVector<double,dimRange> 
   //! evaluate function (comp<ncomps) on entity for local coordinate xi
   double evaluate ( int comp, const Entity &e, const DomainType &xi ) const
   {
-    int index = data_.gridView().indexSet().index(e);
-    return data_[ index ][ comp_ ];
+    assert( comp < ncomps() );
+    return data_[ e ][ comp_ ];
   }
 
   //! name for this function
-  std::string name () const 
+  std::string name () const
   {
     std::stringstream ret;
     ret << name_ << "_" << comp_;
     return ret.str();
   }
 
-  //! add a PiecewiseFunction to the VTKWriter 
-  static void addTo ( const Data &data, Dune::VTKWriter< GridView > &vtkWriter )
+  //! add a PiecewiseFunction to the VTKWriter
+  static void addTo ( const Data &data, Dune::VTKSequenceWriter< GridView > &vtkWriter )
   {
     /* the vtk-Writer class takes ownership of the function added - VTKData
      * is merely a wrapper for the Data class */
     for( int i = 0; i < dimRange; ++i )
-      vtkWriter.addCellData( new This( data, i, "data" ) );
+    {
+      std::shared_ptr< This > ptr( new This( data, i, "data" ) );
+      vtkWriter.addCellData( ptr );
+    }
   }
-  //! add a PiecewiseFunction to the VTKWriter 
-  static void addTo ( const Data &data, const std::string &name, Dune::VTKWriter< GridView > &vtkWriter )
+  //! add a PiecewiseFunction to the VTKSequenceWriter
+  static void addTo ( const Data &data, const std::string &name, Dune::VTKSequenceWriter< GridView > &vtkWriter )
   {
     /* the vtk-Writer class takes ownership of the function added - VTKData
      * is merely a wrapper for the Data class */
     for( int i = 0; i < dimRange; ++i )
-      vtkWriter.addCellData( new This( data, i,name ) );
+    {
+      std::shared_ptr< This > ptr( new This( data, i, "data" ) );
+      vtkWriter.addCellData( ptr );
+    }
   }
-  //! add rank function for visualization of the partitioning 
-  static void addPartitioningData( const int rank, Dune::VTKWriter< GridView > &vtkWriter ) 
+  //! add rank function for visualization of the partitioning
+  static void addPartitioningData( const int rank, Dune::VTKSequenceWriter< GridView > &vtkWriter )
   {
-    vtkWriter.addCellData( new PartitioningData< GridView >(rank) );
+    vtkWriter.addCellData( std::shared_ptr< VolumeData< GridView > > ( new VolumeData< GridView >() ) );
+    vtkWriter.addCellData( std::shared_ptr< PartitioningData< GridView > > ( new PartitioningData< GridView >(rank) ) );
   }
 
 private:

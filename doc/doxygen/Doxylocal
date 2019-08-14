@@ -8,7 +8,8 @@
 
 INPUT                 += @top_srcdir@/dune/
 # see e.g. dune-grid for the examples of mainpage and modules
-# INPUT                 += @srcdir@/mainpage #                          @srcdir@/modules
+# INPUT                 += @srcdir@/mainpage \
+#                          @srcdir@/modules
 
 # The EXCLUDE tag can be used to specify files and/or directories that should
 # excluded from the INPUT source files. This way you can easily exclude a
@@ -27,4 +28,3 @@ INPUT                 += @top_srcdir@/dune/
 # the \image command).
 
 # IMAGE_PATH            += @top_srcdir@/dune/peits/pics
-
