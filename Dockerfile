@@ -8,6 +8,7 @@ RUN apt-get update && \
 # Spack install PETSc and Zoltan
 RUN spack install petsc ^parmetis ^metis ^hypre ^superlu-dist
 RUN spack install zoltan
+RUN spack install boost
 
 # Get and untar the Dune modules
 WORKDIR /home
