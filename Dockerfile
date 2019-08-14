@@ -22,3 +22,10 @@ RUN tar xvzf dune-grid-2.6.0.tar.gz
 RUN tar xvzf dune-fem-releases-2.6.tar.gz
 RUN tar xvzf dune-alugrid-releases-2.6.tar.gz
 
+# Append bashrc to load the necessary modules for PEITS build
+RUN echo 'module load openmpi-3.1.4-gcc-7.4.0-asctus2' >> ~/.bashrc
+RUN echo 'module load petsc-3.11.3-gcc-7.4.0-ctafkbm' >> ~/.bashrc
+RUN echo 'module load zoltan-3.83-gcc-7.4.0-cmexe3l' >> ~/.bashrc
+RUN echo 'module load pkgconf-1.6.1-gcc-7.4.0-j566ycz' >> ~/.bashrc
+RUN echo 'module load cmake-3.15.1-gcc-7.4.0-4dvxaym' >> ~/.bashrc
+RUN echo 'module load boost-1.70.0-gcc-7.4.0-d42gtzk' >> ~/.bashrc
