@@ -4,7 +4,7 @@ if [ ! -f ${ci_path}/petsc_cached ]; then
     git clone -b maint https://gitlab.com/petsc/petsc.git
     pushd petsc
     git checkout 8695de0
-    ./configure --prefix=/usr \
+    ./configure --prefix=${ci_path}/usr \
                 --with-x=0 --with-debugging=0 \
                 CFLAGS="-O3 -DNDEBUG -ffast-math" \
                 --with-parmetis=1 \
@@ -18,8 +18,8 @@ else
     pushd petsc
 fi
 
-sudo make
-sudo make install
+make
+make install
 
 popd
 

@@ -7,6 +7,7 @@ ci_path=$HOME/ci-helper
 if [ ! -d ${ci_path} ]; then
     mkdir -p ${ci_path}
 fi
+mkdir -p ${ci_path}/usr
 
 pushd ${ci_path}
 

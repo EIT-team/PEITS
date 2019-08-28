@@ -34,7 +34,9 @@ install:
 script:
   - cd $TRAVIS_BUILD_DIR
   - cp config.opts_example config.opts
-  - sed -i -e '/^PETSCPATH/d' -e '/ZOLTANPATH/d' config.opts && sed -i -e '1 a PETSCPATH="/usr/lib"' config.opts
+  - sed -i -e '/^PETSCPATH/d' -e '/^ZOLTANPATH/d' config.opts
+  - sed -i -e "1 a PETSCPATH=${ci_path}/usr/lib" -e "1 a ZOLTANPATH=${ci_path}/usr" config.opts
+  - cat config.opts
   - ./INSTALL.sh
   - cd tests
   - sh ./initial_test.sh
