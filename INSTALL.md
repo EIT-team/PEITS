@@ -27,7 +27,7 @@
 1. Download the PETSc library:
 
    ```bash
-   git clone -b maint https://bitbucket.org/petsc/petsc
+   git clone -b maint https://gitlab.com/petsc/petsc.git
    ```
    This will create a `petsc` subfolder in the PEITS_root directory.
 

@@ -30,7 +30,7 @@ install:
   - cd /build
 
   # Download, build and install PETSc
-  - sudo git clone -b maint https://bitbucket.org/petsc/petsc
+  - sudo git clone -b maint https://gitlab.com/petsc/petsc.git
   - cd petsc
   - sudo git checkout 8695de0
   - |
