@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 
-ci_path=/build
+ci_path=$HOME/ci-helper
 
 # Check whether cache exists
 if [ ! -d ${ci_path} ]; then

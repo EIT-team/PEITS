@@ -12,7 +12,7 @@ else
     pushd Zoltan_v3.83/zoltanBUILD
 fi
 
-make install
+sudo make install
 
 popd
 

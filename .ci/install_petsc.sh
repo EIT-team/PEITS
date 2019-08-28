@@ -19,7 +19,7 @@ else
     pushd petsc
 fi
 
-make install
+sudo make install
 
 popd
 

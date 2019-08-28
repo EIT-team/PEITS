@@ -22,14 +22,14 @@ addons:
       - libparmetis-dev
 cache:
   directories:
-    - /build
+    - /$HOME/ci-helper
 
 before_install:
   - test -n $CC  && unset CC
   - test -n $CXX && unset CXX
 
 install:
-  - sudo source ${TRAVIS_BUILD_DIR}/.ci/setup_travis.sh
+  - source ${TRAVIS_BUILD_DIR}/.ci/setup_travis.sh
 
 script:
   - cd $TRAVIS_BUILD_DIR
