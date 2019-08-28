@@ -20,44 +20,17 @@ addons:
       - libug-dev
       - libmetis-dev
       - libparmetis-dev
+cache:
+  directories:
+    - /build
 
 before_install:
   - test -n $CC  && unset CC
   - test -n $CXX && unset CXX
 
 install:
-  - sudo mkdir /build
-  - cd /build
+  - sudo source ${TRAVIS_BUILD_DIR}/.ci/setup_travis.sh
 
-  # Download, build and install PETSc
-  - sudo git clone -b maint https://gitlab.com/petsc/petsc.git
-  - cd petsc
-  - sudo git checkout 8695de0
-  - |
-    sudo ./configure --prefix=/usr \
-                --with-x=0 --with-debugging=0 \
-                CFLAGS="-O3 -DNDEBUG -ffast-math" \
-                --with-parmetis=1 \
-                --with-metis=1 \
-                --with-hypre=1 --download-hypre=yes \
-                --with-superlu_dist=1 --download-superlu_dist=yes \
-                --with-mumps=1 --download-mumps=yes \
-                --with-ml=1 --download-ml=yes \
-                --download-scalapack=yes --download-blacs=yes && \
-    sudo make && sudo make install
-
-  # Download, build and install Zoltan
-  - cd /build
-  - sudo wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
-  - sudo tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
-  - sudo mkdir Zoltan_v3.83/zoltanBUILD
-  - cd Zoltan_v3.83/zoltanBUILD
-  - |
-    sudo ../configure --prefix=/usr \
-                 --with-parmetis --with-parmetis-incdir=/usr/include/ --with-parmetis-libdir=/usr/lib/ && \
-    sudo make everything && \
-    sudo make install
-  
 script:
   - cd $TRAVIS_BUILD_DIR
   - cp config.opts_example config.opts
