@@ -7,13 +7,8 @@ if [ ! -f ${ci_path}/zoltan_cached ]; then
     pushd Zoltan_v3.83/zoltanBUILD
     ../configure --prefix=${ci_path}/usr \
                  --with-parmetis --with-parmetis-incdir=/usr/include/ --with-parmetis-libdir=/usr/lib/
-else
-    pushd Zoltan_v3.83/zoltanBUILD
+    make everything
+    make install
+    popd
+    touch zoltan_cached
 fi
-
-make everything
-make install
-
-popd
-
-touch zoltan_cached

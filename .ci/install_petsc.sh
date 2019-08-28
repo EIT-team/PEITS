@@ -14,13 +14,8 @@ if [ ! -f ${ci_path}/petsc_cached ]; then
                 --with-mumps=1 --download-mumps=yes \
                 --with-ml=1 --download-ml=yes \
                 --download-scalapack=yes --download-blacs=yes
-else
-    pushd petsc
+    make
+    make install
+    popd
+    touch petsc_cached
 fi
-
-make
-make install
-
-popd
-
-touch petsc_cached
