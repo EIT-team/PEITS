@@ -14,11 +14,11 @@ if [ ! -f ${ci_path}/petsc_cached ]; then
                 --with-mumps=1 --download-mumps=yes \
                 --with-ml=1 --download-ml=yes \
                 --download-scalapack=yes --download-blacs=yes
-    make
 else
     pushd petsc
 fi
 
+sudo make
 sudo make install
 
 popd

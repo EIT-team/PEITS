@@ -7,11 +7,11 @@ if [ ! -f ${ci_path}/zoltan_cached ]; then
     pushd Zoltan_v3.83/zoltanBUILD
     ../configure --prefix=/usr \
                  --with-parmetis --with-parmetis-incdir=/usr/include/ --with-parmetis-libdir=/usr/lib/
-    make everything
 else
     pushd Zoltan_v3.83/zoltanBUILD
 fi
 
+make everything
 sudo make install
 
 popd
