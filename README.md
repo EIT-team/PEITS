@@ -2,24 +2,26 @@
 
 # Install guide
 
-The install guide can be found in the [`INSTALL.md`](./INSTALL.md) file or you
-can use the provided docker container.
+Follow [the install guide](./INSTALL.md) or use the provided docker container as
+detailed below.
 
-Build the container available within the repository using:
+You can build the container using:
 ```bash
-docker build -t uclrits/peits:16.04 .
+docker build -t uclrits/peits .
 ```
 
-or fetch the latest one available as:
+or fetch the one for this release as:
 ```bash
-docker fetch uclrits/peits:16.04
+docker pull uclrits/peits:version-1.1
 ```
 
-Then you can run the container as:
+Run then the container as:
 ```bash
 docker run -it --name mypeits -v /full/localpath:/mydata  uclrits/peits:16.04
 ```
-that will login you into the container. If you exit you will stop it.
+Where `/full/localpath/` is the path to a directory on your machine (the host)
+that you want to see it from within the container (under `/mydata`).
+This command will login you into the container. If you exit you will stop it.
 If you want to restart it and get inside again:
 
 ```bash
@@ -27,11 +29,11 @@ docker start mypeits
 docker attach mypeits
 ```
 
-To delete the container when you are done with it you
+To delete the container when you are done with use
 ```bash
 docker rm mypeits
 ```
-That will delete any content you have written out of the mounted location (_i.e._, `/mydata`).
+which will delete any content you have written out of the mounted location (_i.e._, `/mydata`).
 
 Alternatively, you can use [docker compose](https://docs.docker.com/compose/) to
 build and run the container:
@@ -44,6 +46,23 @@ docker-compose down # to stop it
 
 Change the field `volumes` on `docker-compose.yml` to specify which directory
 you want to mount on the docker container.
+
+## Running PEITS on the container
+
+Browse to the PEITS directory and run `dune_peits` as:
+
+```bash
+cd /build/PEITS/src
+mpirun -np 2 ./dune_peits
+```
+
+You need first to set the configuration accordingly to your needs. There are
+two example files: `data/parameter_example.cfg` and `data/standardparams_example.cfg`.
+Edit them as desired and rename them to `parameter.cfg` and `standardparams.cfg`
+respectively.
+
+For more details check the scripts available under the [`tests`](./tests/) directory.
+
 
 # Research Paper
 
