@@ -7,7 +7,7 @@ detailed below.
 
 You can build the container using:
 ```bash
-docker build -t uclrits/peits .
+docker build -t uclrits/peits:verion-1.1 .
 ```
 
 or fetch the one for this release as:
@@ -17,7 +17,7 @@ docker pull uclrits/peits:version-1.1
 
 Run then the container as:
 ```bash
-docker run -it --name mypeits -v /full/localpath:/mydata  uclrits/peits:16.04
+docker run -it --name mypeits -v /full/localpath:/mydata  uclrits/peits:version-1.1
 ```
 Where `/full/localpath/` is the path to a directory on your machine (the host)
 that you want to see it from within the container (under `/mydata`).
