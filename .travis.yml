@@ -41,4 +41,3 @@ script:
   - cd tests
   - sh ./initial_test.sh
   - travis_wait 30 sh ./nn_test.sh
-  - travis_wait 30 sh ./nn_test.sh
