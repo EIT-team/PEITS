@@ -42,9 +42,3 @@ script:
   - sh ./initial_test.sh
   - travis_wait 30 sh ./nn_test.sh
   - travis_wait 30 sh ./nn_test.sh
-
-after_failure:
-  - echo "########## PETSc installation log ##########"
-  - cat /home/travis/build/EIT-team/PEITS/PEITS_root/petsc/arch-linux2-c-opt/lib/petsc/conf/make.log
-  - echo "########## PETSc configuration log ##########"
-  - cat /home/travis/build/EIT-team/PEITS/PEITS_root/petsc/arch-linux2-c-opt/lib/petsc/conf/configure.log
