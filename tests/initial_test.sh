@@ -5,7 +5,12 @@
 # This is a fairly crude method, but md5 hashing won't work, due to slightly different (at >10 decimal places)
 # voltages/jacobians being generated on different processers.
 
-#! /bin/bash 
+#! /bin/bash
+cd ../data
+cp parameter_example.cfg parameter.cfg
+cp standardparams_example.cfg standardparams.cfg
+
+
 #  run forward calculation
 cd ../src
 mpirun -np 2 ./dune_peits

@@ -1,11 +1,11 @@
 function write_parameter_files(forward_settings)
 
 % rename the original parameter file
-movefile([forward_settings.path, 'data',filesep,'parameter'],[forward_settings.path, 'data',filesep,'parameter~']);
+movefile([forward_settings.path, 'data',filesep,'parameter.cfg'],[forward_settings.path, 'data',filesep,'parameter.cfg~']);
 
 % open parameter files
-oldfile = fopen([forward_settings.path, 'data',filesep,'parameter~'], 'r');
-newfile = fopen([forward_settings.path, 'data',filesep,'parameter'], 'w');
+oldfile = fopen([forward_settings.path, 'data',filesep,'parameter.cfg~'], 'r');
+newfile = fopen([forward_settings.path, 'data',filesep,'parameter.cfg'], 'w');
 
 % write changed settings into new parameter file
 tline=fgetl(oldfile);
@@ -151,11 +151,11 @@ fclose(newfile);
 
 
 % rename the original standardparams file
-movefile([forward_settings.path, 'data',filesep,'standardparams'],[forward_settings.path, 'data',filesep,'standardparams~']);
+movefile([forward_settings.path, 'data',filesep,'standardparams.cfg'],[forward_settings.path, 'data',filesep,'standardparams.cfg~']);
 
 % open parameter files
-oldfile = fopen([forward_settings.path, 'data',filesep,'standardparams~'], 'r');
-newfile = fopen([forward_settings.path, 'data',filesep,'standardparams'], 'w');
+oldfile = fopen([forward_settings.path, 'data',filesep,'standardparams.cfg~'], 'r');
+newfile = fopen([forward_settings.path, 'data',filesep,'standardparams.cfg'], 'w');
 
 % write changed settings into new parameter file
 tline=fgetl(oldfile);

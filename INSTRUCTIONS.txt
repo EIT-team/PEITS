@@ -9,7 +9,7 @@ of your time as a researcher!
   it (tip: use "<solverpath>/data/" as your path to save the files directly
   to the directory where you have to put them anyways).
 
-2) In "data/parameter" you have to add another line with your newly created
+2) In "data/parameter.cfg" you have to add another line with your newly created
   Mesh and uncomment all other meshes. This file is your main interaction
   point with the solver. Here you specify what you want it to do. Should it
   compute the jacobian matrix or not? Do you need the electrode voltages or

@@ -40,13 +40,6 @@ script:
   - ./INSTALL.sh
   - cd tests
   - sh ./initial_test.sh
-  - cd ../data
-  # now download nn mesh and try it 
-  - wget https://zenodo.org/record/1313709/files/NNmesh_small.tar.gz
-  - tar xf NNmesh_small.tar.gz
-  - cp parameter parameterBU
-  - cp standardparams standardparamsBU
-  - cd ../tests
   - travis_wait 30 sh ./nn_test.sh
   - travis_wait 30 sh ./nn_test.sh
 

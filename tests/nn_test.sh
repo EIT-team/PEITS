@@ -7,27 +7,32 @@
 
 #! /bin/bash 
 
-# change settings in parameter file
 cd ../data
-cp parameterBU parameter
-cp standardparamsBU standardparams
+
+# now download nn mesh and try it
+wget https://zenodo.org/record/1313709/files/NNmesh_small.tar.gz
+tar xf NNmesh_small.tar.gz
+
+# change settings in parameter file
+cp parameter_example.cfg parameter.cfg
+cp standardparams_example.cfg standardparams.cfg
 cp NN2016_Prt_full.txt NN2016_Prt_full.txtBU
 head NN2016_Prt_full.txtBU > NN2016_Prt_full.txt
 
 #mesh name
-sed -i 's/.*mesh: TA052_meters.*/mesh: NNmesh_small/' parameter
+sed -i 's/.*mesh: TA052_meters.*/mesh: NNmesh_small/' parameter.cfg
 #mesh parameter file
-sed -i 's/.*paramfile: ..\/data\/p.*/\paramfile: ..\/data\/\$(mesh).parameters/' parameter
+sed -i 's/.*paramfile: ..\/data\/p.*/\paramfile: ..\/data\/\$(mesh).parameters/' parameter.cfg
 #conductivities
-sed -i 's/.*conductivities:.*/conductivities: ..\/data\/NNconductivities/' parameter
+sed -i 's/.*conductivities:.*/conductivities: ..\/data\/NNconductivities/' parameter.cfg
 #current protocol
-sed -i 's/current_protocol_TA052.txt/NN2016_Prt_full.txt/' parameter
+sed -i 's/current_protocol_TA052.txt/NN2016_Prt_full.txt/' parameter.cfg
 
 #electrode stuff
-sed -i 's/133.0e-6/240.0e-6/' standardparams
-sed -i 's/contact.impedance: 1000/contact.impedance: 200/' standardparams
-sed -i 's/electrode.diameter: 7.0/electrode.diameter: 10.0/' standardparams
-sed -i 's/electrode.diameter_file:.*/electrode.diameter_file: none/' standardparams
+sed -i 's/133.0e-6/240.0e-6/' standardparams.cfg
+sed -i 's/contact.impedance: 1000/contact.impedance: 200/' standardparams.cfg
+sed -i 's/electrode.diameter: 7.0/electrode.diameter: 10.0/' standardparams.cfg
+sed -i 's/electrode.diameter_file:.*/electrode.diameter_file: none/' standardparams.cfg
 
 
 
