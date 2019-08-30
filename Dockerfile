@@ -34,6 +34,8 @@ RUN wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v
     make everything && \
     make install
 
+RUN rm -rf {petsc,?oltan}
+
 # Copy the local files
 COPY . /build/PEITS/
 WORKDIR PEITS
@@ -51,7 +53,7 @@ RUN bash ./INSTALL.sh
 
 # Create User and set environment
 RUN useradd -ms /bin/bash peitsier
-RUN chown -R peitsier /build/PEITS
+RUN chown -R peitsier:peitsier /build/PEITS
 USER peitsier
 ENV HOME /home/peitsier
 RUN cp /etc/zsh/newuser.zshrc.recommended /home/peitsier/.zshrc
