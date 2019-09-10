@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Simple regression test for forward solver
 # Should only be run using default settings, when first installed
 #
@@ -5,18 +7,18 @@
 # This is a fairly crude method, but md5 hashing won't work, due to slightly different (at >10 decimal places)
 # voltages/jacobians being generated on different processers.
 
-#! /bin/bash
-cd ../data
+THIS_DIR="$(readlink -f "$(dirname "$0")")"
+cd "${THIS_DIR}/../data"
 cp parameter_example.cfg parameter.cfg
 cp standardparams_example.cfg standardparams.cfg
 
 
 #  run forward calculation
-cd ../src
-mpirun -np 2 ./dune_peits
+cd "${THIS_DIR}/../src"
+mpirun -np 2 "${THIS_DIR}/../src/dune_peits"
 
-# Change to output directory	
-cd ../output
+# Change to output directory
+cd "${THIS_DIR}/../output"
 
 # Get file size of computed electrode voltage file and jacobian matrix
 voltage_size=$(wc -c electrode*)
