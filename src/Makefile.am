@@ -10,7 +10,7 @@ PETSCADD = -lcmumps -ldmumps -lsmumps -lzmumps -lmumps_common -lpord \
  -lparmetis -lmetis -lpthread -lHYPRE \
  -lmpi_cxx -lstdc++ -lscalapack -lml -lmpi_cxx \
  -lopen-rte -lopen-pal -lnsl -lutil -lgcc_s -lpthread -ldl \
- -lstdc++ -llapack -lblas -lmpi_f90 -lmpi_f77 -lgfortran -lm -lm -lm -lm -lmpi_cxx \
+ -lstdc++ -llapack -lblas -lgfortran -lm -lm -lm -lm -lmpi_cxx \
  -lstdc++ -lmpi_cxx -lstdc++ -ldl -lmpi 
 
 SUBDIRS =

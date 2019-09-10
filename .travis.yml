@@ -19,14 +19,14 @@ install:
 
 
   - cd ..
-  - wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.8.tar.gz
-  - tar xf zoltan_distrib_v3.8.tar.gz
+  - wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
+  - tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
 
-  - mkdir Zoltan_v3.8/BUILD_DIR
-  - cd Zoltan_v3.8/BUILD_DIR
+  - mkdir Zoltan_v3.83/BUILD_DIR
+  - cd Zoltan_v3.83/BUILD_DIR
 
 
-  - ../configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.8/BUILD_DIR --with-parmetis --with-parmetis-incdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/include" --with-parmetis-libdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/lib"
+  - ../configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.83/BUILD_DIR --with-parmetis --with-parmetis-incdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/include" --with-parmetis-libdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/lib"
 
   - make everything
   - make install
@@ -36,13 +36,22 @@ script:
   - mv config.opts_example config.opts
 
   - PETSCPATH=$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD
-  - ZOLTANPATH=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.8/BUILD_DIR
+  - ZOLTANPATH=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.83/BUILD_DIR
 
   - sed -i "s,/home/username/PEITS_root/petscBUILD,$PETSCPATH,g" config.opts
   - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
   
   - sh INSTALL
-  
   - cd tests
   - sh ./initial_test.sh
+  - cd ../data
+  # now download nn mesh and try it 
+  - wget https://zenodo.org/record/1313709/files/NNmesh_small.tar.gz
+  - tar xf NNmesh_small.tar.gz
+  - cp parameter parameterBU
+  - cp standardparams standardparamsBU
+  - cd ../tests
+  - travis_wait 30 sh ./nn_test.sh
+  - travis_wait 30 sh ./nn_test.sh
+
 

@@ -99,8 +99,8 @@ fprintf(paramfile, ['groundposition.y: ' num2str(gndpos(2), '%6.18f') '\n']);
 fprintf(paramfile, ['groundposition.z: ' num2str(gndpos(3), '%6.18f') '\n\n']);
 
 if (isInt)
-    fprintf(paramfile, 'fem.assign_conductivities: true');
+    fprintf(paramfile, 'fem.assign_conductivities: true'); %PEITS will load values from conductivity file
 else
-    fprintf(paramfile, 'fem.assign_conductivities: false');
+    fprintf(paramfile, 'fem.assign_conductivities: false'); %PEITS will use values saved in dgf
 end
 fclose(paramfile);
