@@ -58,5 +58,4 @@ USER peitsier
 ENV HOME /home/peitsier
 RUN cp /etc/zsh/newuser.zshrc.recommended /home/peitsier/.zshrc
 WORKDIR /mydata
-CMD ["zsh"]
-
+CMD ["bash"]
