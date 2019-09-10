@@ -322,7 +322,7 @@ try
   Dune::Fem::Parameter::append( argc, argv );
 
   // append default parameter file  
-  Dune::Fem::Parameter::append( "../data/parameter" );
+  Dune::Fem::Parameter::append( "../data/parameter.cfg" );
 
   // type of hierarchical grid 
   //typedef Dune :: AlbertaGrid< 2 , 2 > GridType;

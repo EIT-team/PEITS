@@ -1,57 +1,43 @@
-language: bash
+language: cpp
+compiler: gcc
+os: linux
+dist: xenial
 sudo: required
 
+addons:
+  apt:
+    packages:
+      - libblas-dev
+      - liblapack-dev
+      - gfortran
+      - libboost-dev
+      - mpi-default-bin
+      - mpi-default-dev
+      - libgmp-dev
+      - libopenmpi-dev
+      - autotools-dev
+      - automake
+      - libug-dev
+      - libmetis-dev
+      - libparmetis-dev
+cache:
+  directories:
+    - /$HOME/ci-helper
+
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y libblas-dev liblapack-dev gfortran libboost-dev mpi-default-bin mpi-default-dev libgmp-dev libopenmpi-dev
-  
+  - test -n $CC  && unset CC
+  - test -n $CXX && unset CXX
+
 install:
-  - mkdir PEITS_root
-  - cd PEITS_root
+  - source ${TRAVIS_BUILD_DIR}/.ci/setup_travis.sh
 
-  - git clone -b maint https://bitbucket.org/petsc/petsc petsc
-
-  - cd petsc
-  - git checkout 8695de0
-
-
-  - ./configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD --with-x=0 --with-debugging=0 -CFLAGS="-O3 -DNDEBUG -ffast-math" --with-parmetis=1 --download-parmetis=yes --with-hypre=1 --download-hypre=yes --with-superlu_dist=1 --download-superlu_dist=yes --with-mumps=1 --download-mumps=yes --with-ml=1 --download-ml=yes --with-metis=1 --download-metis=yes --download-scalapack=yes --download-blacs=yes && make all test && make install
-
-
-  - cd ..
-  - wget http://www.cs.sandia.gov/~kddevin/Zoltan_Distributions/zoltan_distrib_v3.83.tar.gz
-  - tar xf zoltan_distrib_v3.83.tar.gz --warning=no-unknown-keyword
-
-  - mkdir Zoltan_v3.83/BUILD_DIR
-  - cd Zoltan_v3.83/BUILD_DIR
-
-
-  - ../configure --prefix=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.83/BUILD_DIR --with-parmetis --with-parmetis-incdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/include" --with-parmetis-libdir="$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD/lib"
-
-  - make everything
-  - make install
-  
 script:
   - cd $TRAVIS_BUILD_DIR
-  - mv config.opts_example config.opts
-
-  - PETSCPATH=$TRAVIS_BUILD_DIR/PEITS_root/petscBUILD
-  - ZOLTANPATH=$TRAVIS_BUILD_DIR/PEITS_root/Zoltan_v3.83/BUILD_DIR
-
-  - sed -i "s,/home/username/PEITS_root/petscBUILD,$PETSCPATH,g" config.opts
-  - sed -i "s,/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR,$ZOLTANPATH,g" config.opts
-  
-  - sh INSTALL
+  - cp config.opts_example config.opts
+  - sed -i -e '/^PETSCPATH/d' -e '/^ZOLTANPATH/d' config.opts
+  - sed -i -e "1 a PETSCPATH=${ci_path}/usr/lib" -e "1 a ZOLTANPATH=${ci_path}/usr" config.opts
+  - cat config.opts
+  - ./INSTALL.sh
   - cd tests
   - sh ./initial_test.sh
-  - cd ../data
-  # now download nn mesh and try it 
-  - wget https://zenodo.org/record/1313709/files/NNmesh_small.tar.gz
-  - tar xf NNmesh_small.tar.gz
-  - cp parameter parameterBU
-  - cp standardparams standardparamsBU
-  - cd ../tests
   - travis_wait 30 sh ./nn_test.sh
-  - travis_wait 30 sh ./nn_test.sh
-
-

@@ -1,6 +1,0 @@
-tar xvzf dune-alugrid-2.3.tar.gz
-tar xvzf dune-common-2.3-svn.tar.gz
-tar xvzf dune-fem-1.4.0.tar.gz
-tar xvzf dune-geometry-2.3-svn.tar.gz
-tar xvzf dune-grid-2.3-svn.tar.gz
-./dune-common-2.3-svn/bin/dunecontrol --opts=config.opts all

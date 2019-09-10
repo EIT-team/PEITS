@@ -1,5 +1,5 @@
 PETSCPATH="/home/username/PEITS_root/petscBUILD"
-ZOLTANPATH="/home/username/PEITS_root/Zoltan_v3.8/BUILD_DIR"
+ZOLTANPATH="/home/username/PEITS_root/Zoltan_v3.83/BUILD_DIR"
 
 
 
@@ -15,9 +15,7 @@ CONFIGURE_FLAGS="\
   --with-metis=$PETSCPATH \
   --with-parmetis=$PETSCPATH \
   --with-zoltan=$ZOLTANPATH \
-  --enable-blas \
   --enable-parallel \
-  --enable-fieldvector-size-is-method \
   --enable-experimental-grid-extensions \
   CXXFLAGS=\"$OPTIMFLAGS\" \
   LDFLAGS=\"-ldl\" "
